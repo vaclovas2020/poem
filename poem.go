@@ -9,7 +9,7 @@ import "webimizer.dev/poem/cmd/subcommands"
 
 /*
 
-This package implements Poem CMS base on gRPC services.
+This package implements Poem CMS based on gRPC services.
 You need to start each service indvidually using Docker or using Poem CLI subcommands
 
 */
