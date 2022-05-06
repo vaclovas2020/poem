@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option go_package = "webimizer.dev/poem/poems";
+
+// The greeting service definition.
+service Poems {
+  // Sends a greeting
+  rpc GetPoems (PoemsRequest) returns (PoemsResponse) {}
+}
+
+// The request message containing the category.
+message PoemsRequest {
+  string category = 1;
+}
+
+// The response message containing poems content.
+message PoemsResponse  {
+  bool success = 1;
+  map<int32, Poem> poems = 2;
+}
+
+message Poem {
+  string title = 1;
+  string text = 2;
+}
