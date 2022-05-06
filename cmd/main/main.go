@@ -1,7 +1,9 @@
 package main
 
-import "webimizer.dev/poem/cmd/subcommands"
+import (
+	"webimizer.dev/poem"
+)
 
 func main() {
-	subcommands.RegisterSubcommands()
+	poem.InitApplication()
 }
