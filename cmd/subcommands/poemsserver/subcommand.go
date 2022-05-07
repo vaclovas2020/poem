@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2022, Vaclovas Lapinskis. All rights eserved.
+Copyright (c) 2022, Vaclovas Lapinskis. All rights reserved.
 */
 
 /* poems server subcommand */
