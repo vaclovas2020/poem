@@ -40,5 +40,5 @@ func (p *poemsServerCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...interf
 
 /* Register poems-server subcommand */
 func RegisterSubcommand() {
-	subcommands.Register(&poemsServerCmd{}, "")
+	subcommands.Register(&poemsServerCmd{}, "Server")
 }
