@@ -49,3 +49,18 @@ func TestInitPoemsServer(t *testing.T) {
 	require.NoError(t, err)
 	assert.Contains(t, buf.String(), "Starting server...")
 }
+
+/* Testing install subcommand output */
+func TestInstallSubcommand(t *testing.T) {
+	os.Args = []string{"poem", "install"}
+	r, w, err := os.Pipe()
+	require.NoError(t, err)
+	os.Stdout = w
+	subcommands.DefaultCommander.Output = w
+	poem.InitApplication()
+	_ = w.Close()
+	buf := new(bytes.Buffer)
+	_, err = io.Copy(buf, r)
+	require.NoError(t, err)
+	assert.Contains(t, buf.String(), "Installing CMS database...")
+}
