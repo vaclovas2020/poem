@@ -42,6 +42,9 @@ func (p *poemsServerCmd) SetFlags(f *flag.FlagSet) {
 /* Execute subcommand */
 func (p *poemsServerCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
 	fmt.Println("Starting server...")
+	if p.port > 0 && p.host != "" {
+		runServer(p.host, p.port)
+	}
 	return subcommands.ExitSuccess
 }
 
