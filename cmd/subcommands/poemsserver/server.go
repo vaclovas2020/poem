@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2022, Vaclovas Lapinskis. All rights reserved.
+*/
+
 package poemsserver
 
 import (
@@ -9,10 +13,12 @@ import (
 	"webimizer.dev/poem/poems"
 )
 
+/* Poems gRPC server */
 type poemsServer struct {
 	poems.UnimplementedPoemsServer
 }
 
+/* Run server listener */
 func runServer(host string, port int) {
 	lis, err := net.Listen("tcp", fmt.Sprintf("%s:%d", host, port))
 	if err != nil {

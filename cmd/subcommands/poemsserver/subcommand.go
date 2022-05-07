@@ -17,8 +17,8 @@ import (
 
 /* Poems server command struct */
 type poemsServerCmd struct {
-	host string
-	port int
+	host string // server hostname
+	port int    // server port number
 }
 
 func (*poemsServerCmd) Name() string     { return "poems-server" }
