@@ -8,7 +8,6 @@ package subcommands
 import (
 	"context"
 	"flag"
-	"os"
 
 	"github.com/google/subcommands"
 	"webimizer.dev/poem/cmd/subcommands/poemsserver"
@@ -22,5 +21,5 @@ func RegisterSubcommands() {
 	poemsserver.RegisterSubcommand()
 	flag.Parse()
 	ctx := context.Background()
-	os.Exit(int(subcommands.Execute(ctx)))
+	subcommands.Execute(ctx)
 }
