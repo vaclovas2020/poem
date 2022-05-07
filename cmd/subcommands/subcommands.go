@@ -11,6 +11,7 @@ import (
 	"os"
 
 	"github.com/google/subcommands"
+	"webimizer.dev/poem/cmd/subcommands/poemsserver"
 )
 
 /* Register all application's subcommands and execute choosen subcommand */
@@ -18,6 +19,7 @@ func RegisterSubcommands() {
 	subcommands.Register(subcommands.HelpCommand(), "")
 	subcommands.Register(subcommands.FlagsCommand(), "")
 	subcommands.Register(subcommands.CommandsCommand(), "")
+	poemsserver.RegisterSubcommand()
 	flag.Parse()
 	ctx := context.Background()
 	os.Exit(int(subcommands.Execute(ctx)))
