@@ -34,3 +34,18 @@ func TestInitApplication(t *testing.T) {
 	assert.Contains(t, buf.String(), "help")
 	assert.Contains(t, buf.String(), "poems-server")
 }
+
+/* Testing Poems server output */
+func TestInitPoemsServer(t *testing.T) {
+	os.Args = []string{"poem", "poems-server"}
+	r, w, err := os.Pipe()
+	require.NoError(t, err)
+	os.Stdout = w
+	subcommands.DefaultCommander.Output = w
+	poem.InitApplication()
+	_ = w.Close()
+	buf := new(bytes.Buffer)
+	_, err = io.Copy(buf, r)
+	require.NoError(t, err)
+	assert.Contains(t, buf.String(), "Starting server...")
+}

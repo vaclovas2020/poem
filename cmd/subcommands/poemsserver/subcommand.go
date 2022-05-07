@@ -8,6 +8,9 @@ package poemsserver
 import (
 	"context"
 	"flag"
+	"fmt"
+	"os"
+	"strconv"
 
 	"github.com/google/subcommands"
 )
@@ -28,13 +31,17 @@ func (*poemsServerCmd) Usage() string {
 
 /* Set subcommand flags */
 func (p *poemsServerCmd) SetFlags(f *flag.FlagSet) {
-	f.StringVar(&p.host, "host", "localhost", "server hostname")
-	f.IntVar(&p.port, "host", 8044, "server port")
+	port, err := strconv.Atoi(os.Getenv("RPC_PORT"))
+	if err != nil {
+		port = 0
+	}
+	f.StringVar(&p.host, "host", os.Getenv("RPC_HOST"), "server hostname")
+	f.IntVar(&p.port, "port", port, "server port")
 }
 
 /* Execute subcommand */
 func (p *poemsServerCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
-
+	fmt.Println("Starting server...")
 	return subcommands.ExitSuccess
 }
 
