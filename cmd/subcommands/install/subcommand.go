@@ -21,6 +21,7 @@ type installCmd struct {
 	mysqlPort     int    // mysql port
 	mysqlUser     string // mysql username
 	mysqlPassword string // mysql password
+	mysqlDatabase string // mysql database name
 	cmsUser       string // cms username
 	cmsPassword   string // cms password
 }
@@ -28,7 +29,7 @@ type installCmd struct {
 func (*installCmd) Name() string     { return "install" }
 func (*installCmd) Synopsis() string { return "Install CMS database" }
 func (*installCmd) Usage() string {
-	return `install [-mysql-host] [-mysql-port] [-mysql-user] [-mysql-password] [-cms-user] [-cms-password]:
+	return `install [-mysql-host] [-mysql-port] [-mysql-user] [-mysql-password] [-mysql-database] [-cms-user] [-cms-password]:
 	Install CMS database
 `
 }
@@ -43,6 +44,7 @@ func (p *installCmd) SetFlags(f *flag.FlagSet) {
 	f.IntVar(&p.mysqlPort, "mysql-port", port, "mysql port")
 	f.StringVar(&p.mysqlUser, "mysql-user", os.Getenv("MYSQL_USER"), "mysql user")
 	f.StringVar(&p.mysqlPassword, "mysql-password", os.Getenv("MYSQL_PASSWORD"), "mysql password")
+	f.StringVar(&p.mysqlDatabase, "mysql-database", os.Getenv("MYSQL_DATABASE"), "mysql database name")
 	f.StringVar(&p.cmsUser, "cms-user", os.Getenv("CMS_USER"), "CMS username")
 	f.StringVar(&p.cmsPassword, "cms-password", os.Getenv("CMS_PASSWORD"), "CMS password")
 }
@@ -50,6 +52,10 @@ func (p *installCmd) SetFlags(f *flag.FlagSet) {
 /* Execute subcommand */
 func (p *installCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
 	fmt.Println("Installing CMS database...")
+	if p.mysqlHost != "" && p.mysqlPort > 0 && p.mysqlUser != "" &&
+		p.mysqlPassword != "" && p.mysqlDatabase != "" && p.cmsUser != "" && p.cmsPassword != "" {
+
+	}
 	return subcommands.ExitSuccess
 }
 
