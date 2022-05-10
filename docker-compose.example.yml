@@ -1,0 +1,29 @@
+version: '3.1'
+services:
+  poems_rpc:
+    image: poem:latest
+    restart: always
+    environment:
+      RPC_HOST: poems_rpc
+      RPC_PORT: 7789
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
+      MYSQL_RANDOM_ROOT_PASSWORD: myrootpassword
+      CMS_USER: admin
+      CMS_PASSWORD: password123
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
+      MYSQL_RANDOM_ROOT_PASSWORD: myrootpassword
+    volumes:
+      - db:/var/lib/mysql
+
+volumes:
+  db:
