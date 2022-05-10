@@ -18,6 +18,8 @@ type doInstallHandler func() error
 func (p *installCmd) installDatabase() {
 	err := p.doInstall([]doInstallHandler{
 		doInstallHandler(p.createUserDb),
+		doInstallHandler(p.createCategoriesDb),
+		doInstallHandler(p.createPoemsDb),
 	})
 	if err != nil {
 		panic(err)
@@ -55,7 +57,8 @@ func (p *installCmd) createUserDb() error {
 	if err != nil {
 		return err
 	}
-	_, err = db.Exec("REPLACE INTO `poem_users` (user_name, password_hash, user_role) VALUES (?,?,?);", p.cmsUser, hash, "admin")
+	role := "admin"
+	_, err = db.Exec("REPLACE INTO `poem_users` (user_name, password_hash, user_role) VALUES (?,?,?);", p.cmsUser, hash, role)
 	if err != nil {
 		return err
 	}
