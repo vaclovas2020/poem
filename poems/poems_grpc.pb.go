@@ -22,8 +22,10 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PoemsClient interface {
-	// Sends a greeting
+	// Get poems list from one category
 	GetPoems(ctx context.Context, in *PoemsRequest, opts ...grpc.CallOption) (*PoemsResponse, error)
+	// Get categories list
+	GetCategories(ctx context.Context, in *CategoriesRequest, opts ...grpc.CallOption) (*CategoriesResponse, error)
 }
 
 type poemsClient struct {
@@ -43,12 +45,23 @@ func (c *poemsClient) GetPoems(ctx context.Context, in *PoemsRequest, opts ...gr
 	return out, nil
 }
 
+func (c *poemsClient) GetCategories(ctx context.Context, in *CategoriesRequest, opts ...grpc.CallOption) (*CategoriesResponse, error) {
+	out := new(CategoriesResponse)
+	err := c.cc.Invoke(ctx, "/Poems/GetCategories", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PoemsServer is the server API for Poems service.
 // All implementations must embed UnimplementedPoemsServer
 // for forward compatibility
 type PoemsServer interface {
-	// Sends a greeting
+	// Get poems list from one category
 	GetPoems(context.Context, *PoemsRequest) (*PoemsResponse, error)
+	// Get categories list
+	GetCategories(context.Context, *CategoriesRequest) (*CategoriesResponse, error)
 	mustEmbedUnimplementedPoemsServer()
 }
 
@@ -58,6 +71,9 @@ type UnimplementedPoemsServer struct {
 
 func (UnimplementedPoemsServer) GetPoems(context.Context, *PoemsRequest) (*PoemsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPoems not implemented")
+}
+func (UnimplementedPoemsServer) GetCategories(context.Context, *CategoriesRequest) (*CategoriesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCategories not implemented")
 }
 func (UnimplementedPoemsServer) mustEmbedUnimplementedPoemsServer() {}
 
@@ -90,6 +106,24 @@ func _Poems_GetPoems_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Poems_GetCategories_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CategoriesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PoemsServer).GetCategories(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/Poems/GetCategories",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PoemsServer).GetCategories(ctx, req.(*CategoriesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Poems_ServiceDesc is the grpc.ServiceDesc for Poems service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -100,6 +134,10 @@ var Poems_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetPoems",
 			Handler:    _Poems_GetPoems_Handler,
+		},
+		{
+			MethodName: "GetCategories",
+			Handler:    _Poems_GetCategories_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
