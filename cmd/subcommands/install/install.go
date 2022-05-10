@@ -47,7 +47,15 @@ func (p *installCmd) createUserDb() error {
 		return err
 	}
 	defer db.Close()
-	_, err = db.Exec("CREATE TABLE IF NOT EXISTS `poem_users` (user_id INT NOT NULL AUTO_INCREMENT, user_name VARCHAR(100), password_hash VARCHAR(255), PRIMARY KEY (user_id) );")
+	_, err = db.Exec("CREATE TABLE IF NOT EXISTS `poem_users` (user_id INT NOT NULL AUTO_INCREMENT, user_name VARCHAR(100) NOT NULL, password_hash VARCHAR(255) NOT NULL, PRIMARY KEY (user_id), UNIQUE KEY (user_name) );")
+	if err != nil {
+		return err
+	}
+	hash, err := hashPassword(p.cmsPassword)
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec("REPLACE INTO `poem_users` (user_name, password_hash) VALUES (?,?);", p.cmsUser, hash)
 	if err != nil {
 		return err
 	}
