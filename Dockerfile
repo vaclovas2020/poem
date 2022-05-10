@@ -1,6 +1,6 @@
 FROM golang:latest AS poem
 WORKDIR /go
-ADD . ./src/app
+ADD . .
 RUN cd src/app && go get && make
 RUN rm -rf src
-ENTRYPOINT ["bin/poem"]
+ENTRYPOINT ["/go/poem"]

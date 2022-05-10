@@ -11,9 +11,9 @@ services:
       MYSQL_DATABASE: exampledb
       MYSQL_USER: exampleuser
       MYSQL_PASSWORD: examplepass
-      MYSQL_RANDOM_ROOT_PASSWORD: myrootpassword
       CMS_USER: admin
       CMS_PASSWORD: password123
+    command: install && /go/poem poems-server
   db:
     image: mysql:5.7
     restart: always
