@@ -13,7 +13,7 @@ services:
       MYSQL_PASSWORD: examplepass
       CMS_USER: admin
       CMS_PASSWORD: password123
-    command: install && /go/poem poems-server
+    command: poems-server
   db:
     image: mysql:5.7
     restart: always

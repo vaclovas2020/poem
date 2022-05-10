@@ -59,5 +59,6 @@ func (p *installCmd) createUserDb() error {
 	if err != nil {
 		return err
 	}
+	fmt.Println("CMS user database installed!")
 	return nil
 }

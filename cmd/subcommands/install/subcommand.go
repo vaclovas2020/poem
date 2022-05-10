@@ -54,7 +54,7 @@ func (p *installCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{
 	fmt.Println("Installing CMS database...")
 	if p.mysqlHost != "" && p.mysqlPort > 0 && p.mysqlUser != "" &&
 		p.mysqlPassword != "" && p.mysqlDatabase != "" && p.cmsUser != "" && p.cmsPassword != "" {
-
+		p.installDatabase()
 	}
 	return subcommands.ExitSuccess
 }
