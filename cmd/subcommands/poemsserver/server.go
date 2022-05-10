@@ -16,16 +16,17 @@ import (
 /* Poems gRPC server */
 type poemsServer struct {
 	poems.UnimplementedPoemsServer
+	cmd *poemsServerCmd // poems server subcommand struct
 }
 
 /* Run server listener */
-func runServer(host string, port int) {
-	lis, err := net.Listen("tcp", fmt.Sprintf("%s:%d", host, port))
+func (p *poemsServerCmd) runServer() {
+	lis, err := net.Listen("tcp", fmt.Sprintf("%s:%d", p.host, p.port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	grpcServer := grpc.NewServer()
-	poems.RegisterPoemsServer(grpcServer, &poemsServer{})
-	log.Printf("Starting listen on %s:%d", host, port)
+	poems.RegisterPoemsServer(grpcServer, &poemsServer{cmd: p})
+	log.Printf("Starting listen on %s:%d", p.host, p.port)
 	log.Fatal(grpcServer.Serve(lis))
 }
