@@ -73,7 +73,7 @@ func (p *installCmd) createCategoriesDb() error {
 		return err
 	}
 	defer db.Close()
-	_, err = db.Exec("CREATE TABLE IF NOT EXISTS `poem_categories` (category_id INT NOT NULL AUTO_INCREMENT, name VARCHAR(100) NOT NULL, slug VARCHAR(100) NOT NULL, PRIMARY KEY (category_id), UNIQUE KEY (slug) );")
+	_, err = db.Exec("CREATE TABLE IF NOT EXISTS `poem_categories` (category_id INT NOT NULL AUTO_INCREMENT, name VARCHAR(100) NOT NULL, slug VARCHAR(100) NOT NULL, status VARCHAR(10) NOT NULL, PRIMARY KEY (category_id), UNIQUE KEY (slug) );")
 	if err != nil {
 		return err
 	}
