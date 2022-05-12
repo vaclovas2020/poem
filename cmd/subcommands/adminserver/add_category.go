@@ -7,11 +7,28 @@ package adminserver
 import (
 	"context"
 
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"webimizer.dev/poem/admin"
 )
 
-func (srv *adminServer) AddCategory(context.Context, *admin.AdminCategory) (*admin.CategoryResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddCategory not implemented")
+/* gRPC AddCategory */
+func (srv *adminServer) AddCategory(_ context.Context, category *admin.AdminCategory) (response *admin.CategoryResponse, err error) {
+	err = srv.cmd.addCategory(category)
+	if err != nil {
+		return nil, err
+	}
+	response = &admin.CategoryResponse{Success: true, Category: category}
+	return response, nil
+}
+
+/* Insert category to database */
+func (p *adminServerCmd) addCategory(category *admin.AdminCategory) error {
+	db, err := p.openDBConnection()
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec("INSERT INTO `poem_categories`(name,slug,status) VALUES (?,?,?);", category.Name, category.Slug, category.Status.String())
+	if err != nil {
+		return err
+	}
+	return nil
 }
