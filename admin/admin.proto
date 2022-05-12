@@ -25,6 +25,7 @@ message CategoryResponse  {
 message AdminPoem {
   string title = 1;
   string text = 2;
+  int32 categoryId = 3;
 }
 
 message AdminCategory {
