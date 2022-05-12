@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+option go_package = "webimizer.dev/poem/admin";
+
+// The admin service definition.
+service Admin {
+  // Add new poem
+  rpc AddPoem (Poem) returns (PoemResponse) {}
+  // Add new category
+  rpc AddCategory (Category) returns (CategoryResponse) {}
+}
+
+// The response message containing poem  object content.
+message PoemResponse  {
+  bool success = 1;
+  Poem poem = 2;
+}
+
+// The response message containing category  object content.
+message CategoryResponse  {
+    bool success = 1;
+    Category category = 2;
+}
+
+message Poem {
+  string title = 1;
+  string text = 2;
+}
+
+message Category {
+  string name = 1;
+  string slug = 2;
+}
