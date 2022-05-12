@@ -23,9 +23,9 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AdminClient interface {
 	// Add new poem
-	AddPoem(ctx context.Context, in *Poem, opts ...grpc.CallOption) (*PoemResponse, error)
+	AddPoem(ctx context.Context, in *AdminPoem, opts ...grpc.CallOption) (*PoemResponse, error)
 	// Add new category
-	AddCategory(ctx context.Context, in *Category, opts ...grpc.CallOption) (*CategoryResponse, error)
+	AddCategory(ctx context.Context, in *AdminCategory, opts ...grpc.CallOption) (*CategoryResponse, error)
 }
 
 type adminClient struct {
@@ -36,7 +36,7 @@ func NewAdminClient(cc grpc.ClientConnInterface) AdminClient {
 	return &adminClient{cc}
 }
 
-func (c *adminClient) AddPoem(ctx context.Context, in *Poem, opts ...grpc.CallOption) (*PoemResponse, error) {
+func (c *adminClient) AddPoem(ctx context.Context, in *AdminPoem, opts ...grpc.CallOption) (*PoemResponse, error) {
 	out := new(PoemResponse)
 	err := c.cc.Invoke(ctx, "/Admin/AddPoem", in, out, opts...)
 	if err != nil {
@@ -45,7 +45,7 @@ func (c *adminClient) AddPoem(ctx context.Context, in *Poem, opts ...grpc.CallOp
 	return out, nil
 }
 
-func (c *adminClient) AddCategory(ctx context.Context, in *Category, opts ...grpc.CallOption) (*CategoryResponse, error) {
+func (c *adminClient) AddCategory(ctx context.Context, in *AdminCategory, opts ...grpc.CallOption) (*CategoryResponse, error) {
 	out := new(CategoryResponse)
 	err := c.cc.Invoke(ctx, "/Admin/AddCategory", in, out, opts...)
 	if err != nil {
@@ -59,9 +59,9 @@ func (c *adminClient) AddCategory(ctx context.Context, in *Category, opts ...grp
 // for forward compatibility
 type AdminServer interface {
 	// Add new poem
-	AddPoem(context.Context, *Poem) (*PoemResponse, error)
+	AddPoem(context.Context, *AdminPoem) (*PoemResponse, error)
 	// Add new category
-	AddCategory(context.Context, *Category) (*CategoryResponse, error)
+	AddCategory(context.Context, *AdminCategory) (*CategoryResponse, error)
 	mustEmbedUnimplementedAdminServer()
 }
 
@@ -69,10 +69,10 @@ type AdminServer interface {
 type UnimplementedAdminServer struct {
 }
 
-func (UnimplementedAdminServer) AddPoem(context.Context, *Poem) (*PoemResponse, error) {
+func (UnimplementedAdminServer) AddPoem(context.Context, *AdminPoem) (*PoemResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddPoem not implemented")
 }
-func (UnimplementedAdminServer) AddCategory(context.Context, *Category) (*CategoryResponse, error) {
+func (UnimplementedAdminServer) AddCategory(context.Context, *AdminCategory) (*CategoryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddCategory not implemented")
 }
 func (UnimplementedAdminServer) mustEmbedUnimplementedAdminServer() {}
@@ -89,7 +89,7 @@ func RegisterAdminServer(s grpc.ServiceRegistrar, srv AdminServer) {
 }
 
 func _Admin_AddPoem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Poem)
+	in := new(AdminPoem)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -101,13 +101,13 @@ func _Admin_AddPoem_Handler(srv interface{}, ctx context.Context, dec func(inter
 		FullMethod: "/Admin/AddPoem",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).AddPoem(ctx, req.(*Poem))
+		return srv.(AdminServer).AddPoem(ctx, req.(*AdminPoem))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Admin_AddCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Category)
+	in := new(AdminCategory)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -119,7 +119,7 @@ func _Admin_AddCategory_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: "/Admin/AddCategory",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AdminServer).AddCategory(ctx, req.(*Category))
+		return srv.(AdminServer).AddCategory(ctx, req.(*AdminCategory))
 	}
 	return interceptor(ctx, in, info, handler)
 }

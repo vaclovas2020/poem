@@ -12,6 +12,6 @@ import (
 	"webimizer.dev/poem/admin"
 )
 
-func (srv *adminServer) AddCategory(context.Context, *admin.Category) (*admin.CategoryResponse, error) {
+func (srv *adminServer) AddCategory(context.Context, *admin.AdminCategory) (*admin.CategoryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddCategory not implemented")
 }

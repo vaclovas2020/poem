@@ -12,6 +12,6 @@ import (
 	"webimizer.dev/poem/admin"
 )
 
-func (srv *adminServer) AddPoem(context.Context, *admin.Poem) (*admin.PoemResponse, error) {
+func (srv *adminServer) AddPoem(context.Context, *admin.AdminPoem) (*admin.PoemResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddPoem not implemented")
 }
