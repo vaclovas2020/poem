@@ -22,7 +22,7 @@ make test
 ```
 
 Install on Docker:
-1. Build image form Dockerfile:
+1. Build image from Dockerfile:
 ```sh
 docker build . -t poem
 ```
