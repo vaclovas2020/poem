@@ -11,7 +11,7 @@ import (
 )
 
 /* gRPC GetCategories */
-func (srv poemsServer) GetCategories(ctx context.Context, req *poems.CategoriesRequest) (result *poems.CategoriesResponse, err error) {
+func (srv *poemsServer) GetCategories(ctx context.Context, req *poems.CategoriesRequest) (result *poems.CategoriesResponse, err error) {
 	categoriesMap, err := srv.cmd.getCategories(req.Status)
 	if err != nil {
 		return nil, err
