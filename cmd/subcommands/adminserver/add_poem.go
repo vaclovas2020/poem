@@ -7,11 +7,26 @@ package adminserver
 import (
 	"context"
 
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"webimizer.dev/poem/admin"
 )
 
-func (srv *adminServer) AddPoem(context.Context, *admin.AdminPoem) (*admin.PoemResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddPoem not implemented")
+func (srv *adminServer) AddPoem(_ context.Context, poem *admin.AdminPoem) (response *admin.PoemResponse, err error) {
+	err = srv.cmd.addPoem(poem)
+	if err != nil {
+		return nil, err
+	}
+	response = &admin.PoemResponse{Success: true, Poem: poem}
+	return response, nil
+}
+
+func (p *adminServerCmd) addPoem(poem *admin.AdminPoem) error {
+	db, err := p.openDBConnection()
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec("INSERT INTO `poem_poems`(category_id,title,text) VALUES (?,?,?);", poem.CategoryId, poem.Title, poem.Text)
+	if err != nil {
+		return err
+	}
+	return nil
 }
