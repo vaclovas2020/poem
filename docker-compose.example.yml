@@ -14,6 +14,20 @@ services:
       CMS_USER: admin
       CMS_PASSWORD: password123
     command: poems-server
+  admin_rpc:
+    image: poem:latest
+    restart: always
+    environment:
+      RPC_HOST: admin_rpc
+      RPC_PORT: 7790
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
+      CMS_USER: admin
+      CMS_PASSWORD: password123
+    command: admin-server
   db:
     image: mysql:5.7
     restart: always
