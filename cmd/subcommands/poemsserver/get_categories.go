@@ -12,7 +12,7 @@ import (
 
 /* gRPC GetCategories */
 func (srv *poemsServer) GetCategories(ctx context.Context, req *poems.CategoriesRequest) (result *poems.CategoriesResponse, err error) {
-	categoriesMap, err := srv.cmd.getCategories(req.Status)
+	categoriesMap, err := srv.cmd.getCategories(req.Status.String())
 	if err != nil {
 		return nil, err
 	}
