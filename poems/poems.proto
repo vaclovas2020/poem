@@ -11,7 +11,11 @@ service Poems {
 }
 
 message CategoriesRequest {
-  string status = 1;
+  enum Status {
+    PUBLISHED = 0;
+    DRAFT = 1;
+  }
+  Status status = 1;
 }
 
 // The response message containing poems content.

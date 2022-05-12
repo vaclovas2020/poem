@@ -31,4 +31,9 @@ message AdminPoem {
 message AdminCategory {
   string name = 1;
   string slug = 2;
+  enum Status {
+    PUBLISHED = 0;
+    DRAFT = 1;
+  }
+  Status status = 3;
 }
