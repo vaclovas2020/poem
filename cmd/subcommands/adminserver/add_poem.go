@@ -10,6 +10,7 @@ import (
 	"webimizer.dev/poem/admin"
 )
 
+/* gRPC AddPoem */
 func (srv *adminServer) AddPoem(_ context.Context, poem *admin.AdminPoem) (response *admin.PoemResponse, err error) {
 	err = srv.cmd.addPoem(poem)
 	if err != nil {
@@ -19,6 +20,7 @@ func (srv *adminServer) AddPoem(_ context.Context, poem *admin.AdminPoem) (respo
 	return response, nil
 }
 
+/* Insert poem to database */
 func (p *adminServerCmd) addPoem(poem *admin.AdminPoem) error {
 	db, err := p.openDBConnection()
 	if err != nil {
