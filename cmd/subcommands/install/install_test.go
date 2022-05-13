@@ -11,7 +11,7 @@ import (
 )
 
 /* Create mysql database mock */
-func NewMock() (*sql.DB, sqlmock.Sqlmock) {
+func newMock() (*sql.DB, sqlmock.Sqlmock) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		log.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
@@ -23,7 +23,7 @@ func NewMock() (*sql.DB, sqlmock.Sqlmock) {
 var p = installCmd{cmsUser: "User", cmsPassword: "Password"}
 
 func TestCreateUserDb(t *testing.T) {
-	db, mock := NewMock()
+	db, mock := newMock()
 	sql := "CREATE TABLE IF NOT EXISTS `poem_users` \\(user_id INT NOT NULL AUTO_INCREMENT, user_name VARCHAR\\(100\\) NOT NULL, password_hash VARCHAR\\(255\\) NOT NULL, user_role VARCHAR\\(20\\) NOT NULL, PRIMARY KEY \\(user_id\\), UNIQUE KEY \\(user_name\\) \\);"
 	mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(0, 0))
 	sql2 := "REPLACE INTO `poem_users` \\(user_name, password_hash, user_role\\) VALUES \\(\\?,\\?,\\?\\);"
@@ -36,7 +36,7 @@ func TestCreateUserDb(t *testing.T) {
 	mock.ExpectExec(sql).WillReturnError(fmt.Errorf("Testing error handler"))
 	err = p.createUserDb(db)
 	assert.Error(t, err)
-	db, mock = NewMock()
+	db, mock = newMock()
 	mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(0, 0))
 	mock.ExpectExec(sql2).WithArgs(p.cmsUser, password, "admin").WillReturnError(fmt.Errorf("Testing error handler"))
 	err = p.createUserDb(db)
@@ -44,7 +44,7 @@ func TestCreateUserDb(t *testing.T) {
 }
 
 func TestCreateCategoriesDb(t *testing.T) {
-	db, mock := NewMock()
+	db, mock := newMock()
 	sql := "CREATE TABLE IF NOT EXISTS `poem_categories` \\(category_id INT NOT NULL AUTO_INCREMENT, name VARCHAR\\(100\\) NOT NULL, slug VARCHAR\\(100\\) NOT NULL, status VARCHAR\\(10\\) NOT NULL, PRIMARY KEY \\(category_id\\), UNIQUE KEY \\(slug\\) \\);"
 	mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(0, 0))
 	err := p.createCategoriesDb(db)
@@ -55,7 +55,7 @@ func TestCreateCategoriesDb(t *testing.T) {
 }
 
 func TestCreatePoemDb(t *testing.T) {
-	db, mock := NewMock()
+	db, mock := newMock()
 	sql := "CREATE TABLE IF NOT EXISTS `poem_poems` \\(poem_id INT NOT NULL AUTO_INCREMENT, category_id INT NOT NULL, title VARCHAR\\(100\\) NOT NULL, text TEXT NOT NULL, PRIMARY KEY \\(poem_id\\) \\);"
 	mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(0, 0))
 	err := p.createPoemsDb(db)
@@ -66,7 +66,7 @@ func TestCreatePoemDb(t *testing.T) {
 }
 
 func TestDoInstall(t *testing.T) {
-	db, _ := NewMock()
+	db, _ := newMock()
 	err := p.doInstall(db, []doInstallHandler{
 		doInstallHandler(func(db *sql.DB) error { return nil }),
 		doInstallHandler(func(db *sql.DB) error { return nil }),
@@ -83,7 +83,7 @@ func TestDoInstall(t *testing.T) {
 }
 
 func TestInstallDatabase(t *testing.T) {
-	db, mock := NewMock()
+	db, mock := newMock()
 	sql := "CREATE TABLE IF NOT EXISTS `poem_users` \\(user_id INT NOT NULL AUTO_INCREMENT, user_name VARCHAR\\(100\\) NOT NULL, password_hash VARCHAR\\(255\\) NOT NULL, user_role VARCHAR\\(20\\) NOT NULL, PRIMARY KEY \\(user_id\\), UNIQUE KEY \\(user_name\\) \\);"
 	mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(0, 0))
 	sql2 := "REPLACE INTO `poem_users` \\(user_name, password_hash, user_role\\) VALUES \\(\\?,\\?,\\?\\);"
