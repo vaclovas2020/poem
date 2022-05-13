@@ -10,6 +10,7 @@ import (
 	"flag"
 
 	"github.com/google/subcommands"
+	"webimizer.dev/poem/cmd/subcommands/adminfrontend"
 	"webimizer.dev/poem/cmd/subcommands/adminserver"
 	"webimizer.dev/poem/cmd/subcommands/install"
 	"webimizer.dev/poem/cmd/subcommands/poemsserver"
@@ -23,6 +24,7 @@ func RegisterSubcommands() {
 	poemsserver.RegisterSubcommand()
 	adminserver.RegisterSubcommand()
 	install.RegisterSubcommand()
+	adminfrontend.RegisterSubcommand()
 	flag.Parse()
 	ctx := context.Background()
 	subcommands.Execute(ctx)

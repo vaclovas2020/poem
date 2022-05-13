@@ -67,6 +67,21 @@ func TestInitAdminServer(t *testing.T) {
 	assert.Contains(t, buf.String(), "Starting server...")
 }
 
+/* Testing Admin frontend command output */
+func TestInitAdminFrontend(t *testing.T) {
+	os.Args = []string{"poem", "admin-frontend"}
+	r, w, err := os.Pipe()
+	require.NoError(t, err)
+	os.Stdout = w
+	subcommands.DefaultCommander.Output = w
+	poem.InitApplication()
+	_ = w.Close()
+	buf := new(bytes.Buffer)
+	_, err = io.Copy(buf, r)
+	require.NoError(t, err)
+	assert.Contains(t, buf.String(), "Starting server...")
+}
+
 /* Testing install subcommand output */
 func TestInstallSubcommand(t *testing.T) {
 	os.Args = []string{"poem", "install"}
