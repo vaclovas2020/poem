@@ -35,7 +35,12 @@ Install on Docker:
 ```sh
 docker build . -t poem
 ```
-2. Rename file ```docker-compose.example.yml``` to ```docker-compose.yml``` and change environment variables.
+2. Copy file ```docker-compose.example.yml``` to ```docker-compose.yml``` and change environment variables (if needed).
+
+```sh
+cp docker-compose.example.yml docker-compose.yml
+```
+
 3. Build Docker containers with docker-compose:
 ```sh
  docker-compose up -d
