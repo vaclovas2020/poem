@@ -9,7 +9,8 @@ This project is based on Go and use gRPC framework for backend web services.
 By developing this project, I learned:
 1. How to create gRPC services using Go and protoc (Protocol Buffer Compiler).
 2. How to write Go tests.
-3. How to create CLI subcommands
+3. How to create CLI subcommands.
+4. How to create generic function to handle multiple types. [Go to source code](https://github.com/vaclovas2020/poem/blob/main/cmd/subcommands/adminserver/db_exec.go)
 
 Build application:
 ```sh
