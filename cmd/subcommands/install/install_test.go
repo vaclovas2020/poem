@@ -81,3 +81,33 @@ func TestDoInstall(t *testing.T) {
 	})
 	assert.Error(t, err)
 }
+
+func TestInstallDatabase(t *testing.T) {
+	db, mock := NewMock()
+	sql := "CREATE TABLE IF NOT EXISTS `poem_users` \\(user_id INT NOT NULL AUTO_INCREMENT, user_name VARCHAR\\(100\\) NOT NULL, password_hash VARCHAR\\(255\\) NOT NULL, user_role VARCHAR\\(20\\) NOT NULL, PRIMARY KEY \\(user_id\\), UNIQUE KEY \\(user_name\\) \\);"
+	mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(0, 0))
+	sql2 := "REPLACE INTO `poem_users` \\(user_name, password_hash, user_role\\) VALUES \\(\\?,\\?,\\?\\);"
+	password, err := hashPassword(p.cmsPassword)
+	p.cmsPasswordHash = password
+	assert.NoError(t, err)
+	mock.ExpectExec(sql2).WithArgs(p.cmsUser, password, "admin").WillReturnResult(sqlmock.NewResult(0, 1))
+	sql3 := "CREATE TABLE IF NOT EXISTS `poem_categories` \\(category_id INT NOT NULL AUTO_INCREMENT, name VARCHAR\\(100\\) NOT NULL, slug VARCHAR\\(100\\) NOT NULL, status VARCHAR\\(10\\) NOT NULL, PRIMARY KEY \\(category_id\\), UNIQUE KEY \\(slug\\) \\);"
+	mock.ExpectExec(sql3).WillReturnResult(sqlmock.NewResult(0, 0))
+	sql4 := "CREATE TABLE IF NOT EXISTS `poem_poems` \\(poem_id INT NOT NULL AUTO_INCREMENT, category_id INT NOT NULL, title VARCHAR\\(100\\) NOT NULL, text TEXT NOT NULL, PRIMARY KEY \\(poem_id\\) \\);"
+	mock.ExpectExec(sql4).WillReturnResult(sqlmock.NewResult(0, 0))
+	err = p.installDatabase(db)
+	assert.NoError(t, err)
+	mock.ExpectExec(sql).WillReturnError(fmt.Errorf("Testing error handler"))
+	err = p.installDatabase(db)
+	assert.Error(t, err)
+}
+
+func TestOpenDBConnection(t *testing.T) {
+	p.mysqlHost = "fake"
+	p.mysqlPort = 45
+	p.mysqlUser = "user"
+	p.mysqlPassword = "password"
+	p.mysqlDatabase = "test"
+	_, err := p.openDBConnection()
+	assert.NoError(t, err)
+}

@@ -13,8 +13,10 @@ By developing this project, I learned:
 4. How to create generic function to handle multiple types. [Sql generic function](https://github.com/vaclovas2020/poem/blob/main/cmd/subcommands/adminserver/db_exec.go) [Template generic function](https://github.com/vaclovas2020/poem/blob/main/runtime/generic_template.go)
 
 Test coverage:
+
 webimizer.dev/poem/runtime	0.004s	coverage: 100.0% of statements
-webimizer.dev/poem/cmd/subcommands/install	3.025s	coverage: 46.4% of statements
+
+webimizer.dev/poem/cmd/subcommands/install	4.481s	coverage: 55.2% of statements
 
 Build application:
 ```sh
