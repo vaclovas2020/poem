@@ -8,7 +8,7 @@ import (
 	"webimizer.dev/webimizer"
 )
 
-type LoginTemplateParams struct {
+type loginTemplateParams struct {
 	PageTitle      string // page title
 	LoginActionUrl string // login form action url
 	CopyrightText  string // footer copyright text
@@ -20,7 +20,7 @@ func httpNotAllowFunc(rw http.ResponseWriter, r *http.Request) {
 }
 
 func (p *adminFrontendCmd) addLoginPageHandler() error {
-	obj := &LoginTemplateParams{
+	obj := &loginTemplateParams{
 		PageTitle:      "Login | Poem CMS",
 		LoginActionUrl: "/login",
 		CopyrightText:  "Copyright © 2022 Vaclovas Lapinskis",
