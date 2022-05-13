@@ -6,3 +6,4 @@ RUN rm -rf src
 ENTRYPOINT ["/go/poem"]
 EXPOSE 7789
 EXPOSE 7790
+EXPOSE 7791
