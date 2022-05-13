@@ -15,20 +15,17 @@ import (
 type doInstallHandler func(db *sql.DB) error
 
 /* Install CMS database */
-func (p *installCmd) installDatabase() {
-	db, err := p.openDBConnection()
-	if err != nil {
-		panic(err)
-	}
+func (p *installCmd) installDatabase(db *sql.DB) error {
 	defer db.Close()
-	err = p.doInstall(db, []doInstallHandler{
+	err := p.doInstall(db, []doInstallHandler{
 		doInstallHandler(p.createUserDb),
 		doInstallHandler(p.createCategoriesDb),
 		doInstallHandler(p.createPoemsDb),
 	})
 	if err != nil {
-		panic(err)
+		return err
 	}
+	return nil
 }
 
 /* Execute installer functions */

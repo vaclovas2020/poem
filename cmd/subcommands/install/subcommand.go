@@ -60,7 +60,12 @@ func (p *installCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{
 			panic(err)
 		}
 		p.cmsPasswordHash = hash
-		p.installDatabase()
+		db, err := p.openDBConnection()
+		if err != nil {
+			panic(err)
+		}
+		defer db.Close()
+		p.installDatabase(db)
 	}
 	return subcommands.ExitSuccess
 }
