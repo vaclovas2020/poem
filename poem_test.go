@@ -35,6 +35,7 @@ func TestInitApplication(t *testing.T) {
 	assert.Contains(t, buf.String(), "install")
 	assert.Contains(t, buf.String(), "poems-server")
 	assert.Contains(t, buf.String(), "admin-server")
+	assert.Contains(t, buf.String(), "admin-frontend")
 }
 
 /* Testing Poems server output */
