@@ -10,7 +10,7 @@ By developing this project, I learned:
 1. How to create gRPC services using Go and protoc (Protocol Buffer Compiler). [Go to source code](https://github.com/vaclovas2020/poem/blob/main/poems/poems.proto)
 2. How to write Go tests. [Go to source code](https://github.com/vaclovas2020/poem/blob/main/poem_test.go)
 3. How to create CLI subcommands. [Go to source code](https://github.com/vaclovas2020/poem/blob/main/cmd/subcommands/subcommands.go)
-4. How to create generic function to handle multiple types. [Go to source code](https://github.com/vaclovas2020/poem/blob/main/cmd/subcommands/adminserver/db_exec.go)
+4. How to create generic function to handle multiple types. [Sql generic function](https://github.com/vaclovas2020/poem/blob/main/cmd/subcommands/adminserver/db_exec.go)
 
 Build application:
 ```sh
