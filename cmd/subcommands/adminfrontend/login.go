@@ -23,7 +23,7 @@ func (p *adminFrontendCmd) addLoginPageHandler() error {
 	obj := &LoginTemplateParams{
 		PageTitle:      "Login | Poem CMS",
 		LoginActionUrl: "/login",
-		CopyrightText:  "Copyright &copy; 2022 Vaclovas Lapinskis",
+		CopyrightText:  "Copyright © 2022 Vaclovas Lapinskis",
 	}
 	output, err := runtime.TemplateParse(templates, "template/login.html", obj)
 	if err != nil {
