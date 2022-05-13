@@ -147,3 +147,5 @@ gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c h1:dUUwHk2QECo/6vqA44rthZ8ie
 gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
 honnef.co/go/tools v0.0.0-20190102054323-c2f93a96b099/go.mod h1:rf3lG4BRIbNafJWhAfAdb/ePZxsR/4RtNHQocxwk9r4=
 honnef.co/go/tools v0.0.0-20190523083050-ea95bdfd59fc/go.mod h1:rf3lG4BRIbNafJWhAfAdb/ePZxsR/4RtNHQocxwk9r4=
+webimizer.dev/webimizer v1.2.0 h1:J0EojBAh30ho52MA22ibfgWT7AX2krQiqkf5OC0sqMI=
+webimizer.dev/webimizer v1.2.0/go.mod h1:TTpD4Tdj0cIVPQH6S9ERR/4k13S28dtIt5UfwwsAd64=

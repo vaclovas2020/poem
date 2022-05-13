@@ -3,7 +3,7 @@ Go-powered CMS for poets and writers (based on gRPC services)
 
 [![Go Reference](https://pkg.go.dev/badge/webimizer.dev/poem.svg)](https://pkg.go.dev/webimizer.dev/poem)
 
-![Poem](web/assets/img/poem_logo.png "Poem")
+![Poem](cmd/subcommands/adminfrontend/assets/img/poem_logo.png "Poem")
 
 This project is based on Go and use gRPC framework for backend web services. 
 By developing this project, I learned:
