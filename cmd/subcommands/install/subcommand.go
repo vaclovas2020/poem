@@ -17,13 +17,14 @@ import (
 
 /* install subcommand struct */
 type installCmd struct {
-	mysqlHost     string // mysql hostname
-	mysqlPort     int    // mysql port
-	mysqlUser     string // mysql username
-	mysqlPassword string // mysql password
-	mysqlDatabase string // mysql database name
-	cmsUser       string // cms username
-	cmsPassword   string // cms password
+	mysqlHost       string // mysql hostname
+	mysqlPort       int    // mysql port
+	mysqlUser       string // mysql username
+	mysqlPassword   string // mysql password
+	mysqlDatabase   string // mysql database name
+	cmsUser         string // cms username
+	cmsPassword     string // cms password
+	cmsPasswordHash string // cms password hash (generated)
 }
 
 func (*installCmd) Name() string     { return "install" }
@@ -54,6 +55,11 @@ func (p *installCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{
 	fmt.Println("Installing CMS database...")
 	if p.mysqlHost != "" && p.mysqlPort > 0 && p.mysqlUser != "" &&
 		p.mysqlPassword != "" && p.mysqlDatabase != "" && p.cmsUser != "" && p.cmsPassword != "" {
+		hash, err := hashPassword(p.cmsPassword)
+		if err != nil {
+			panic(err)
+		}
+		p.cmsPasswordHash = hash
 		p.installDatabase()
 	}
 	return subcommands.ExitSuccess

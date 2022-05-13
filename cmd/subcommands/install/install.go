@@ -53,12 +53,8 @@ func (p *installCmd) createUserDb(db *sql.DB) error {
 	if err != nil {
 		return err
 	}
-	hash, err := hashPassword(p.cmsPassword)
-	if err != nil {
-		return err
-	}
 	role := "admin"
-	_, err = db.Exec("REPLACE INTO `poem_users` (user_name, password_hash, user_role) VALUES (?,?,?);", p.cmsUser, hash, role)
+	_, err = db.Exec("REPLACE INTO `poem_users` (user_name, password_hash, user_role) VALUES (?,?,?);", p.cmsUser, p.cmsPasswordHash, role)
 	if err != nil {
 		return err
 	}
