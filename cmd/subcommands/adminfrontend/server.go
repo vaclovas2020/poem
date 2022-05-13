@@ -12,6 +12,9 @@ import (
 //go:embed assets
 var content embed.FS
 
+//go:embed template
+var templates embed.FS
+
 func (p *adminFrontendCmd) runServer() {
 	webimizer.DefaultHTTPHeaders = [][]string{
 		{"x-content-type-options", "nosniff"},
@@ -22,6 +25,9 @@ func (p *adminFrontendCmd) runServer() {
 		webimizer.HttpHandler(func(rw http.ResponseWriter, r *http.Request) {
 			http.FileServer(http.FS(content)).ServeHTTP(rw, r)
 		})) // serve web static assets
-
+	err := p.addLoginPageHandler()
+	if err != nil {
+		panic(err)
+	}
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%d", p.host, p.port), nil)) // Start server
 }

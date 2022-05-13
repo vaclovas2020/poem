@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="lt">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow" />
+  <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+  <title>{{.PageTitle}}</title>
+</head>
+
+<body class="bg-dark text-white">
+  <div class="container">
+    <h1>Login</h1>
+    <form method="POST" action="{{.LoginActionUrl}}">
+      <div class="form-group">
+        <label for="email">Username</label>
+        <input type="text" class="form-control" id="username" autocomplete="username" placeholder="Enter username">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" autocomplete="current-password"
+          placeholder="Password">
+      </div>
+      <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+  </div>
+  <footer class="footer">
+    <div class="container-fluid">
+      <p
+        style="display: block;font-size: 12px;text-align: center;padding-top: 1em;border-top: 1px solid rgba(255,255,255,0.1);">
+        {{.CopyrightText}}</p>
+    </div>
+  </footer>
+  <script src="/assets/js/bootstrap.bundle.min.js" defer></script>
+</body>
+
+</html>
