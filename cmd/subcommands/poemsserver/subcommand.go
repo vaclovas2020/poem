@@ -29,7 +29,7 @@ type poemsServerCmd struct {
 func (*poemsServerCmd) Name() string     { return "poems-server" }
 func (*poemsServerCmd) Synopsis() string { return "Start poems gRPC server" }
 func (*poemsServerCmd) Usage() string {
-	return `poems-server [-host] [-port]:
+	return `poems-server [-host] [-port] [-mysql-host] [-mysql-port] [-mysql-user] [-mysql-password] [-mysql-database]:
   Start poems gRPC server
 `
 }
@@ -44,7 +44,7 @@ func (p *poemsServerCmd) SetFlags(f *flag.FlagSet) {
 	f.IntVar(&p.port, "port", port, "server port")
 	mysql_port, err := strconv.Atoi(os.Getenv("MYSQL_PORT"))
 	if err != nil {
-		port = 0
+		mysql_port = 0
 	}
 	f.StringVar(&p.mysqlHost, "mysql-host", os.Getenv("MYSQL_HOST"), "mysql hostname")
 	f.IntVar(&p.mysqlPort, "mysql-port", mysql_port, "mysql port")

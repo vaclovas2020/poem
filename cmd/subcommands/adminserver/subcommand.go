@@ -29,7 +29,7 @@ type adminServerCmd struct {
 func (*adminServerCmd) Name() string     { return "admin-server" }
 func (*adminServerCmd) Synopsis() string { return "Start admin gRPC server" }
 func (*adminServerCmd) Usage() string {
-	return `admin-server [-host] [-port]:
+	return `admin-server [-host] [-port] [-mysql-host] [-mysql-port] [-mysql-user] [-mysql-password] [-mysql-database]:
   Start admin gRPC server
 `
 }
@@ -44,7 +44,7 @@ func (p *adminServerCmd) SetFlags(f *flag.FlagSet) {
 	f.IntVar(&p.port, "port", port, "server port")
 	mysql_port, err := strconv.Atoi(os.Getenv("MYSQL_PORT"))
 	if err != nil {
-		port = 0
+		mysql_port = 0
 	}
 	f.StringVar(&p.mysqlHost, "mysql-host", os.Getenv("MYSQL_HOST"), "mysql hostname")
 	f.IntVar(&p.mysqlPort, "mysql-port", mysql_port, "mysql port")
@@ -62,7 +62,7 @@ func (p *adminServerCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...interf
 	return subcommands.ExitSuccess
 }
 
-/* Register poems-server subcommand */
+/* Register admin-server subcommand */
 func RegisterSubcommand() {
 	subcommands.Register(&adminServerCmd{}, "Server")
 }
