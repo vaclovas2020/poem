@@ -8,6 +8,7 @@ func execDb[T any](p *adminServerCmd, obj T, execHandler func(*sql.DB, T) (sql.R
 	if err != nil {
 		return err
 	}
+	defer db.Close()
 	_, err = execHandler(db, obj)
 	if err != nil {
 		return err
