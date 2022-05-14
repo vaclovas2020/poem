@@ -9,6 +9,7 @@ import (
 	"database/sql"
 
 	"webimizer.dev/poem/admin"
+	"webimizer.dev/poem/runtime"
 )
 
 /* gRPC AddCategory */
@@ -17,7 +18,7 @@ func (srv *adminServer) AddCategory(_ context.Context, category *admin.AdminCate
 	if err != nil {
 		return nil, err
 	}
-	err = execDb(db, category, func(db *sql.DB, category *admin.AdminCategory) (sql.Result, error) {
+	err = runtime.ExecDb(db, category, func(db *sql.DB, category *admin.AdminCategory) (sql.Result, error) {
 		return db.Exec("INSERT INTO `poem_categories`(name,slug,status) VALUES (?,?,?);", category.Name, category.Slug, category.Status.String())
 	})
 	if err != nil {
