@@ -10,11 +10,11 @@ By developing this project, I learned:
 1. How to create gRPC services using Go and protoc (Protocol Buffer Compiler). [Go to source code](https://github.com/vaclovas2020/poem/blob/main/poems/poems.proto)
 2. How to write Go tests. [Go to source code](https://github.com/vaclovas2020/poem/blob/main/poem_test.go)
 3. How to create CLI subcommands. [Go to source code](https://github.com/vaclovas2020/poem/blob/main/cmd/subcommands/subcommands.go)
-4. How to create generic function to handle multiple types. [Sql ExecDB generic function](https://github.com/vaclovas2020/poem/blob/runtime/db_exec.go) [Sql QueryRowDB generic function](https://github.com/vaclovas2020/poem/blob/runtime/db_query_row.go) [Template generic function](https://github.com/vaclovas2020/poem/blob/main/runtime/generic_template.go)
+4. How to create generic function to handle multiple types. [Sql ExecDB generic function](https://github.com/vaclovas2020/poem/blob/runtime/db_exec.go) [Sql QueryRowDB generic function](https://github.com/vaclovas2020/poem/blob/runtime/db_query_row.go)[Sql QueryDB generic function](https://github.com/vaclovas2020/poem/blob/runtime/db_query.go) [Template generic function](https://github.com/vaclovas2020/poem/blob/main/runtime/generic_template.go)
 
 Test coverage:
 
-webimizer.dev/poem/runtime	0.007s	coverage: 100.0% of statements
+webimizer.dev/poem/runtime	0.004s	coverage: 100.0% of statements
 
 webimizer.dev/poem/cmd/subcommands/install	4.481s	coverage: 55.2% of statements
 

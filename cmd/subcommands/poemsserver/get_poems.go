@@ -9,6 +9,7 @@ import (
 	"database/sql"
 
 	"webimizer.dev/poem/poems"
+	"webimizer.dev/poem/runtime"
 )
 
 /* gRPC GetPoems */
@@ -30,7 +31,9 @@ func (srv *poemsServer) GetPoems(ctx context.Context, req *poems.PoemsRequest) (
 /* get poems list from mysql database */
 func (p *poemsServerCmd) getPoems(db *sql.DB, category string) (result map[int32]*poems.Poem, err error) {
 	defer db.Close()
-	query, err := db.Query("SELECT poem_poems.poem_id, poem_poems.title, poem_poems.text FROM poem_poems INNER JOIN poem_categories ON poem_poems.category_id = poem_categories.category_id WHERE poem_categories.slug = ?;", category)
+	query, err := runtime.QueryDb(db, category, func(db *sql.DB, category string) (*sql.Rows, error) {
+		return db.Query("SELECT poem_poems.poem_id, poem_poems.title, poem_poems.text FROM poem_poems INNER JOIN poem_categories ON poem_poems.category_id = poem_categories.category_id WHERE poem_categories.slug = ?;", category)
+	})
 	if err != nil {
 		return nil, err
 	}
