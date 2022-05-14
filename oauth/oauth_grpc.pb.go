@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type OauthClient interface {
 	// Authenticate user with given credentials
 	AuthUser(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
+	NewUser(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 }
 
 type oauthClient struct {
@@ -43,12 +44,22 @@ func (c *oauthClient) AuthUser(ctx context.Context, in *AuthRequest, opts ...grp
 	return out, nil
 }
 
+func (c *oauthClient) NewUser(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error) {
+	out := new(AuthResponse)
+	err := c.cc.Invoke(ctx, "/Oauth/NewUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OauthServer is the server API for Oauth service.
 // All implementations must embed UnimplementedOauthServer
 // for forward compatibility
 type OauthServer interface {
 	// Authenticate user with given credentials
 	AuthUser(context.Context, *AuthRequest) (*AuthResponse, error)
+	NewUser(context.Context, *AuthRequest) (*AuthResponse, error)
 	mustEmbedUnimplementedOauthServer()
 }
 
@@ -58,6 +69,9 @@ type UnimplementedOauthServer struct {
 
 func (UnimplementedOauthServer) AuthUser(context.Context, *AuthRequest) (*AuthResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AuthUser not implemented")
+}
+func (UnimplementedOauthServer) NewUser(context.Context, *AuthRequest) (*AuthResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method NewUser not implemented")
 }
 func (UnimplementedOauthServer) mustEmbedUnimplementedOauthServer() {}
 
@@ -90,6 +104,24 @@ func _Oauth_AuthUser_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Oauth_NewUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AuthRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OauthServer).NewUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/Oauth/NewUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OauthServer).NewUser(ctx, req.(*AuthRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Oauth_ServiceDesc is the grpc.ServiceDesc for Oauth service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -100,6 +132,10 @@ var Oauth_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AuthUser",
 			Handler:    _Oauth_AuthUser_Handler,
+		},
+		{
+			MethodName: "NewUser",
+			Handler:    _Oauth_NewUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

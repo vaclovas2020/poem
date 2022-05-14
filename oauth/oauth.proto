@@ -6,6 +6,7 @@ option go_package = "webimizer.dev/poem/oauth";
 service Oauth {
   // Authenticate user with given credentials
   rpc AuthUser (AuthRequest) returns (AuthResponse) {}
+  rpc NewUser (AuthRequest) returns (AuthResponse) {}
 }
 
 message AuthRequest {
