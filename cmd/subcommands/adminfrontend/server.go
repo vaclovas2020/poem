@@ -32,5 +32,9 @@ func (p *adminFrontendCmd) runServer() {
 	if err != nil {
 		panic(err)
 	}
+	err = p.addHomePageHandler()
+	if err != nil {
+		panic(err)
+	}
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%d", p.host, p.port), nil)) // Start server
 }
