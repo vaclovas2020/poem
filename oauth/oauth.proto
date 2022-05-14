@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option go_package = "webimizer.dev/poem/oauth";
+
+// The poems service definition.
+service Poems {
+  // Authenticate user with given credentials
+  rpc AuthUser (AuthRequest) returns (AuthResponse) {}
+}
+
+message AuthRequest {
+  string username = 1;
+  string password = 2;
+}
+
+// The response message containing user authentication info
+message AuthResponse  {
+  bool success = 1;
+  User user = 2;
+}
+
+message User {
+    enum Role {
+        admin = 0;
+        user = 1;
+    }
+  string name = 1;
+  Role role = 2;
+}
