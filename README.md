@@ -18,8 +18,6 @@ webimizer.dev/poem/runtime	0.004s	coverage: 100.0% of statements
 
 webimizer.dev/poem/cmd/subcommands/install	4.481s	coverage: 55.2% of statements
 
-webimizer.dev/poem/cmd/subcommands/adminserver	0.006s	coverage: 9.6% of statements
-
 Build application:
 ```sh
 make

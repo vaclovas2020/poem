@@ -1,4 +1,4 @@
-package adminserver
+package runtime_test
 
 import (
 	"database/sql"
@@ -8,6 +8,7 @@ import (
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/assert"
+	"webimizer.dev/poem/runtime"
 )
 
 /* Create mysql database mock */
@@ -28,9 +29,9 @@ func TestExcecDb(t *testing.T) {
 	db, mock := newMock()
 	mock.ExpectExec("Test").WillReturnResult(sqlmock.NewResult(0, 1))
 	obj := &newDbObj{Test: "Test"}
-	err := execDb(db, obj, func(db *sql.DB, obj *newDbObj) (sql.Result, error) { return db.Exec(obj.Test) })
+	err := runtime.ExecDb(db, obj, func(db *sql.DB, obj *newDbObj) (sql.Result, error) { return db.Exec(obj.Test) })
 	assert.NoError(t, err)
 	mock.ExpectExec("Test").WillReturnError(fmt.Errorf("Testing error handler"))
-	err = execDb(db, obj, func(db *sql.DB, obj *newDbObj) (sql.Result, error) { return db.Exec(obj.Test) })
+	err = runtime.ExecDb(db, obj, func(db *sql.DB, obj *newDbObj) (sql.Result, error) { return db.Exec(obj.Test) })
 	assert.Error(t, err)
 }
