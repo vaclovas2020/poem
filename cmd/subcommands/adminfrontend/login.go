@@ -51,6 +51,8 @@ func (p *adminFrontendCmd) generateNewTokenAndShowLogin(session *sessions.Sessio
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	rw.Header().Set("Cache-Control", "no-store, must-revalidate")
+	rw.Header().Set("Pragma", "no-cache")
 	output, err := runtime.TemplateParse(templates, "template/login.html", obj)
 	if err != nil {
 		http.Error(rw, err.Error(), http.StatusInternalServerError)
@@ -72,7 +74,7 @@ func (p *adminFrontendCmd) addLoginPageHandler() error {
 				return
 			}
 			if v, found := session.Values["userLoggedIn"].(bool); found && v {
-				http.Redirect(rw, r, "/", http.StatusMovedPermanently)
+				http.Redirect(rw, r, "/", http.StatusFound)
 				return
 			}
 			webimizer.Get(rw, r, func(rw http.ResponseWriter, r *http.Request) {
@@ -125,7 +127,9 @@ func (p *adminFrontendCmd) addLoginPageHandler() error {
 						session.Values["username"] = response.User.Name
 						session.Values["role"] = response.User.Role.String()
 						session.Save(r, rw)
-						http.Redirect(rw, r, "/", http.StatusMovedPermanently)
+						rw.Header().Set("Cache-Control", "no-store, must-revalidate")
+						rw.Header().Set("Pragma", "no-cache")
+						http.Redirect(rw, r, "/", http.StatusFound)
 						return
 					} else {
 						session.AddFlash("Invalid username or password")

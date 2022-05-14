@@ -15,16 +15,16 @@ func (p *adminFrontendCmd) addLogoutHandler() error {
 				return
 			}
 			if v, found := session.Values["userLoggedIn"].(bool); found && v {
-				session, err = session.Store().New(r, "sid")
-				if err != nil {
-					http.Error(rw, err.Error(), http.StatusInternalServerError)
-					return
-				}
+				session.Values = make(map[interface{}]interface{})
 				session.Save(r, rw)
-				http.Redirect(rw, r, "/login", http.StatusMovedPermanently)
+				rw.Header().Set("Cache-Control", "no-store, must-revalidate")
+				rw.Header().Set("Pragma", "no-cache")
+				http.Redirect(rw, r, "/login", http.StatusFound)
 				return
 			} else {
-				http.Redirect(rw, r, "/login", http.StatusMovedPermanently)
+				rw.Header().Set("Cache-Control", "no-store, must-revalidate")
+				rw.Header().Set("Pragma", "no-cache")
+				http.Redirect(rw, r, "/login", http.StatusFound)
 				return
 			}
 		}), // webimizer.HttpHandler call only if method is allowed
