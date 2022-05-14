@@ -15,3 +15,4 @@
 # vendor/
 poem
 docker-compose.yml
+reload.sh
