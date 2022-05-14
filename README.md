@@ -14,7 +14,7 @@ By developing this project, I learned:
 
 Test coverage:
 
-webimizer.dev/poem/runtime	0.004s	coverage: 100.0% of statements
+webimizer.dev/poem/runtime	0.007s	coverage: 100.0% of statements
 
 webimizer.dev/poem/cmd/subcommands/install	4.481s	coverage: 55.2% of statements
 
