@@ -18,10 +18,6 @@ webimizer.dev/poem/runtime	0.004s	coverage: 100.0% of statements
 
 webimizer.dev/poem/cmd/subcommands/install	4.481s	coverage: 55.2% of statements
 
-Demo website: [poem.dev](https://poem.dev/)
-Demo user: demo@poem.dev
-Demo password: password123
-
 Build application:
 ```sh
 make
