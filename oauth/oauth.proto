@@ -2,8 +2,8 @@ syntax = "proto3";
 
 option go_package = "webimizer.dev/poem/oauth";
 
-// The poems service definition.
-service Poems {
+// The oauth service definition.
+service Oauth {
   // Authenticate user with given credentials
   rpc AuthUser (AuthRequest) returns (AuthResponse) {}
 }

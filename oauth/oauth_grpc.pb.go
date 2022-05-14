@@ -18,88 +18,88 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// PoemsClient is the client API for Poems service.
+// OauthClient is the client API for Oauth service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type PoemsClient interface {
+type OauthClient interface {
 	// Authenticate user with given credentials
 	AuthUser(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 }
 
-type poemsClient struct {
+type oauthClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewPoemsClient(cc grpc.ClientConnInterface) PoemsClient {
-	return &poemsClient{cc}
+func NewOauthClient(cc grpc.ClientConnInterface) OauthClient {
+	return &oauthClient{cc}
 }
 
-func (c *poemsClient) AuthUser(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error) {
+func (c *oauthClient) AuthUser(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error) {
 	out := new(AuthResponse)
-	err := c.cc.Invoke(ctx, "/Poems/AuthUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/Oauth/AuthUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// PoemsServer is the server API for Poems service.
-// All implementations must embed UnimplementedPoemsServer
+// OauthServer is the server API for Oauth service.
+// All implementations must embed UnimplementedOauthServer
 // for forward compatibility
-type PoemsServer interface {
+type OauthServer interface {
 	// Authenticate user with given credentials
 	AuthUser(context.Context, *AuthRequest) (*AuthResponse, error)
-	mustEmbedUnimplementedPoemsServer()
+	mustEmbedUnimplementedOauthServer()
 }
 
-// UnimplementedPoemsServer must be embedded to have forward compatible implementations.
-type UnimplementedPoemsServer struct {
+// UnimplementedOauthServer must be embedded to have forward compatible implementations.
+type UnimplementedOauthServer struct {
 }
 
-func (UnimplementedPoemsServer) AuthUser(context.Context, *AuthRequest) (*AuthResponse, error) {
+func (UnimplementedOauthServer) AuthUser(context.Context, *AuthRequest) (*AuthResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AuthUser not implemented")
 }
-func (UnimplementedPoemsServer) mustEmbedUnimplementedPoemsServer() {}
+func (UnimplementedOauthServer) mustEmbedUnimplementedOauthServer() {}
 
-// UnsafePoemsServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to PoemsServer will
+// UnsafeOauthServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to OauthServer will
 // result in compilation errors.
-type UnsafePoemsServer interface {
-	mustEmbedUnimplementedPoemsServer()
+type UnsafeOauthServer interface {
+	mustEmbedUnimplementedOauthServer()
 }
 
-func RegisterPoemsServer(s grpc.ServiceRegistrar, srv PoemsServer) {
-	s.RegisterService(&Poems_ServiceDesc, srv)
+func RegisterOauthServer(s grpc.ServiceRegistrar, srv OauthServer) {
+	s.RegisterService(&Oauth_ServiceDesc, srv)
 }
 
-func _Poems_AuthUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Oauth_AuthUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AuthRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PoemsServer).AuthUser(ctx, in)
+		return srv.(OauthServer).AuthUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/Poems/AuthUser",
+		FullMethod: "/Oauth/AuthUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PoemsServer).AuthUser(ctx, req.(*AuthRequest))
+		return srv.(OauthServer).AuthUser(ctx, req.(*AuthRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Poems_ServiceDesc is the grpc.ServiceDesc for Poems service.
+// Oauth_ServiceDesc is the grpc.ServiceDesc for Oauth service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Poems_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "Poems",
-	HandlerType: (*PoemsServer)(nil),
+var Oauth_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "Oauth",
+	HandlerType: (*OauthServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "AuthUser",
-			Handler:    _Poems_AuthUser_Handler,
+			Handler:    _Oauth_AuthUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
