@@ -18,6 +18,8 @@ type loginTemplateParams struct {
 	CopyrightText  string // footer copyright text
 	XsrfToken      string // secure xsrf_token
 	Message        string // form error message (optional)
+	EmailField     string // user email input label
+	PasswordField  string // user password input label
 }
 
 func httpNotAllowFunc(rw http.ResponseWriter, r *http.Request) {
@@ -42,6 +44,8 @@ func (p *adminFrontendCmd) generateNewTokenAndShowLogin(session *sessions.Sessio
 		LoginActionUrl: "/login",
 		CopyrightText:  "Copyright © 2022 Vaclovas Lapinskis",
 		XsrfToken:      secureXsrf,
+		EmailField:     "Email",
+		PasswordField:  "Password",
 	}
 	for _, v := range session.Flashes() {
 		obj.Message = v.(string)
@@ -87,10 +91,10 @@ func (p *adminFrontendCmd) addLoginPageHandler() error {
 					return
 				}
 				token := r.FormValue("xsrf_token")
-				username := r.FormValue("username")
+				email := r.FormValue("email")
 				password := r.FormValue("password")
-				if token == "" || username == "" || password == "" {
-					session.AddFlash("Please enter all form fields")
+				if token == "" || email == "" || password == "" {
+					session.AddFlash("Please enter valid email and password")
 					p.generateNewTokenAndShowLogin(session, rw, r)
 					return
 				}
@@ -111,7 +115,7 @@ func (p *adminFrontendCmd) addLoginPageHandler() error {
 				}
 				valid := xsrftoken.Valid(realToken, p.hashKey, session.ID, "oauth")
 				if valid {
-					response, err := p.grpcAuthUser(&oauth.AuthRequest{Username: username, Password: password, Role: oauth.UserRole_admin})
+					response, err := p.grpcAuthUser(&oauth.AuthRequest{Email: email, Password: password, Role: oauth.UserRole_admin})
 					if err != nil {
 						session.AddFlash(err.Error())
 						p.generateNewTokenAndShowLogin(session, rw, r)
@@ -124,7 +128,7 @@ func (p *adminFrontendCmd) addLoginPageHandler() error {
 							return
 						}
 						session.Values["userLoggedIn"] = true
-						session.Values["username"] = response.User.Name
+						session.Values["email"] = response.User.Name
 						session.Values["role"] = response.User.Role.String()
 						session.Save(r, rw)
 						rw.Header().Set("Cache-Control", "no-store, must-revalidate")
@@ -132,7 +136,7 @@ func (p *adminFrontendCmd) addLoginPageHandler() error {
 						http.Redirect(rw, r, "/", http.StatusFound)
 						return
 					} else {
-						session.AddFlash("Invalid username or password")
+						session.AddFlash("Invalid email or password")
 						p.generateNewTokenAndShowLogin(session, rw, r)
 						return
 					}

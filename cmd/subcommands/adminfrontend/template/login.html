@@ -17,12 +17,12 @@
     <img style="width: 250px;margin: 0 auto;display: block;" src="/assets/img/poem_logo.png" alt="Logo" />
     <form method="POST" action="{{.LoginActionUrl}}">
       <div class="form-group">
-        <label for="email">Username</label>
-        <input type="text" class="form-control" name="username" id="username" autocomplete="username"
-          placeholder="Enter username">
+        <label for="email">{{.EmailField}}</label>
+        <input type="email" class="form-control" name="email" id="email" autocomplete="username"
+          placeholder="Enter email">
       </div>
       <div class="form-group">
-        <label for="password">Password</label>
+        <label for="password">{{.PasswordField}}</label>
         <input type="password" class="form-control" name="password" id="password" autocomplete="current-password"
           placeholder="Password">
       </div>

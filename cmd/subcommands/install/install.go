@@ -46,12 +46,12 @@ func (p *installCmd) openDBConnection() (*sql.DB, error) {
 
 /* Create user database schema */
 func (p *installCmd) createUserDb(db *sql.DB) error {
-	_, err := db.Exec("CREATE TABLE IF NOT EXISTS `poem_users` (user_id INT NOT NULL AUTO_INCREMENT, user_name VARCHAR(100) NOT NULL, password_hash VARCHAR(255) NOT NULL, user_role VARCHAR(20) NOT NULL, PRIMARY KEY (user_id), UNIQUE KEY (user_name) );")
+	_, err := db.Exec("CREATE TABLE IF NOT EXISTS `poem_users` (user_id INT NOT NULL AUTO_INCREMENT, user_email VARCHAR(255) NOT NULL, password_hash VARCHAR(255) NOT NULL, user_role VARCHAR(20) NOT NULL, PRIMARY KEY (user_id), UNIQUE KEY (user_name) );")
 	if err != nil {
 		return err
 	}
 	role := "admin"
-	_, err = db.Exec("REPLACE INTO `poem_users` (user_name, password_hash, user_role) VALUES (?,?,?);", p.cmsUser, p.cmsPasswordHash, role)
+	_, err = db.Exec("REPLACE INTO `poem_users` (user_email, password_hash, user_role) VALUES (?,?,?);", p.cmsUser, p.cmsPasswordHash, role)
 	if err != nil {
 		return err
 	}

@@ -24,9 +24,9 @@ var p = installCmd{cmsUser: "User", cmsPassword: "Password"}
 
 func TestCreateUserDb(t *testing.T) {
 	db, mock := newMock()
-	sql := "CREATE TABLE IF NOT EXISTS `poem_users` \\(user_id INT NOT NULL AUTO_INCREMENT, user_name VARCHAR\\(100\\) NOT NULL, password_hash VARCHAR\\(255\\) NOT NULL, user_role VARCHAR\\(20\\) NOT NULL, PRIMARY KEY \\(user_id\\), UNIQUE KEY \\(user_name\\) \\);"
+	sql := "CREATE TABLE IF NOT EXISTS `poem_users` \\(user_id INT NOT NULL AUTO_INCREMENT, user_email VARCHAR\\(255\\) NOT NULL, password_hash VARCHAR\\(255\\) NOT NULL, user_role VARCHAR\\(20\\) NOT NULL, PRIMARY KEY \\(user_id\\), UNIQUE KEY \\(user_name\\) \\);"
 	mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(0, 0))
-	sql2 := "REPLACE INTO `poem_users` \\(user_name, password_hash, user_role\\) VALUES \\(\\?,\\?,\\?\\);"
+	sql2 := "REPLACE INTO `poem_users` \\(user_email, password_hash, user_role\\) VALUES \\(\\?,\\?,\\?\\);"
 	password, err := hashPassword(p.cmsPassword)
 	p.cmsPasswordHash = password
 	assert.NoError(t, err)
@@ -84,9 +84,9 @@ func TestDoInstall(t *testing.T) {
 
 func TestInstallDatabase(t *testing.T) {
 	db, mock := newMock()
-	sql := "CREATE TABLE IF NOT EXISTS `poem_users` \\(user_id INT NOT NULL AUTO_INCREMENT, user_name VARCHAR\\(100\\) NOT NULL, password_hash VARCHAR\\(255\\) NOT NULL, user_role VARCHAR\\(20\\) NOT NULL, PRIMARY KEY \\(user_id\\), UNIQUE KEY \\(user_name\\) \\);"
+	sql := "CREATE TABLE IF NOT EXISTS `poem_users` \\(user_id INT NOT NULL AUTO_INCREMENT, user_email VARCHAR\\(255\\) NOT NULL, password_hash VARCHAR\\(255\\) NOT NULL, user_role VARCHAR\\(20\\) NOT NULL, PRIMARY KEY \\(user_id\\), UNIQUE KEY \\(user_name\\) \\);"
 	mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(0, 0))
-	sql2 := "REPLACE INTO `poem_users` \\(user_name, password_hash, user_role\\) VALUES \\(\\?,\\?,\\?\\);"
+	sql2 := "REPLACE INTO `poem_users` \\(user_email, password_hash, user_role\\) VALUES \\(\\?,\\?,\\?\\);"
 	password, err := hashPassword(p.cmsPassword)
 	p.cmsPasswordHash = password
 	assert.NoError(t, err)
