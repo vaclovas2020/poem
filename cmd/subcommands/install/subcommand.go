@@ -57,14 +57,15 @@ func (p *installCmd) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{
 		p.mysqlPassword != "" && p.mysqlDatabase != "" && p.cmsUser != "" && p.cmsPassword != "" {
 		hash, err := hashPassword(p.cmsPassword)
 		if err != nil {
-			panic(err)
+			fmt.Println(err.Error())
+			return subcommands.ExitFailure
 		}
 		p.cmsPasswordHash = hash
 		db, err := p.openDBConnection()
 		if err != nil {
-			panic(err)
+			fmt.Println(err.Error())
+			return subcommands.ExitFailure
 		}
-		defer db.Close()
 		p.installDatabase(db)
 	}
 	return subcommands.ExitSuccess

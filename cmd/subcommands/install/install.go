@@ -16,6 +16,7 @@ type doInstallHandler func(db *sql.DB) error
 
 /* Install CMS database */
 func (p *installCmd) installDatabase(db *sql.DB) error {
+	fmt.Println("Starting database schema installation...")
 	defer db.Close()
 	err := p.doInstall(db, []doInstallHandler{
 		doInstallHandler(p.createUserDb),
@@ -23,8 +24,10 @@ func (p *installCmd) installDatabase(db *sql.DB) error {
 		doInstallHandler(p.createPoemsDb),
 	})
 	if err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
+	fmt.Println("Done")
 	return nil
 }
 
@@ -46,7 +49,7 @@ func (p *installCmd) openDBConnection() (*sql.DB, error) {
 
 /* Create user database schema */
 func (p *installCmd) createUserDb(db *sql.DB) error {
-	_, err := db.Exec("CREATE TABLE IF NOT EXISTS `poem_users` (user_id INT NOT NULL AUTO_INCREMENT, user_email VARCHAR(255) NOT NULL, password_hash VARCHAR(255) NOT NULL, user_role VARCHAR(20) NOT NULL, PRIMARY KEY (user_id), UNIQUE KEY (user_name) );")
+	_, err := db.Exec("CREATE TABLE IF NOT EXISTS `poem_users` (user_id INT NOT NULL AUTO_INCREMENT, user_email VARCHAR(255) NOT NULL, password_hash VARCHAR(255) NOT NULL, user_role VARCHAR(20) NOT NULL, PRIMARY KEY (user_id), UNIQUE KEY (user_email) );")
 	if err != nil {
 		return err
 	}
