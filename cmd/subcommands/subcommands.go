@@ -13,6 +13,7 @@ import (
 	"webimizer.dev/poem/cmd/subcommands/adminfrontend"
 	"webimizer.dev/poem/cmd/subcommands/adminserver"
 	"webimizer.dev/poem/cmd/subcommands/install"
+	"webimizer.dev/poem/cmd/subcommands/oauthserver"
 	"webimizer.dev/poem/cmd/subcommands/poemsserver"
 )
 
@@ -23,6 +24,7 @@ func RegisterSubcommands() {
 	subcommands.Register(subcommands.CommandsCommand(), "")
 	poemsserver.RegisterSubcommand()
 	adminserver.RegisterSubcommand()
+	oauthserver.RegisterSubcommand()
 	install.RegisterSubcommand()
 	adminfrontend.RegisterSubcommand()
 	flag.Parse()

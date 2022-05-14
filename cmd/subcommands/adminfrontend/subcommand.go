@@ -19,8 +19,10 @@ import (
 type adminFrontendCmd struct {
 	host          string // server hostname
 	port          int    // server port number
-	gRPChost      string // admin gRPC hostname
-	gRPCport      int    // admin gRPC port number
+	gRPCAdminHost string // admin gRPC admin hostname
+	gRPCAdminPort int    // admin gRPC admin port number
+	gRPCOauthHost string // admin gRPC oauth hostname
+	gRPCOauthPort int    // admin gRPC oauth port number
 	mysqlHost     string // mysql hostname
 	mysqlPort     int    // mysql port
 	mysqlUser     string // mysql username
@@ -33,19 +35,25 @@ type adminFrontendCmd struct {
 func (*adminFrontendCmd) Name() string     { return "admin-frontend" }
 func (*adminFrontendCmd) Synopsis() string { return "Start admin frontend server" }
 func (*adminFrontendCmd) Usage() string {
-	return `admin-frontend [-host] [-port] [-grpc-host] [-grpc-port] [-mysql-host] [-mysql-port] [-mysql-user] [-mysql-password] [-mysql-database] [-hash-key] [-crypto-key]:
+	return `admin-frontend [-host] [-port] [-admin-grpc-host] [-admin-grpc-port] [-mysql-host] [-mysql-port] [-mysql-user] [-mysql-password] [-mysql-database] [-hash-key] [-crypto-key]:
 	Start admin frontend server
 `
 }
 
 /* Set subcommand flags */
 func (p *adminFrontendCmd) SetFlags(f *flag.FlagSet) {
-	grpc_port, err := strconv.Atoi(os.Getenv("RPC_PORT"))
+	grpc_port, err := strconv.Atoi(os.Getenv("ADMIN_RPC_PORT"))
 	if err != nil {
 		grpc_port = 0
 	}
-	f.StringVar(&p.gRPChost, "grpc-host", os.Getenv("RPC_HOST"), "admin gRPC hostname")
-	f.IntVar(&p.gRPCport, "grpc-port", grpc_port, "admin gRPC port")
+	f.StringVar(&p.gRPCAdminHost, "admin-grpc-host", os.Getenv("ADMIN_RPC_HOST"), "admin gRPC hostname")
+	f.IntVar(&p.gRPCAdminPort, "admin-grpc-port", grpc_port, "admin gRPC port")
+	grpc_oauth_port, err := strconv.Atoi(os.Getenv("OAUTH_RPC_PORT"))
+	if err != nil {
+		grpc_port = 0
+	}
+	f.StringVar(&p.gRPCOauthHost, "oauth-grpc-host", os.Getenv("OAUTH_RPC_HOST"), "oauth gRPC hostname")
+	f.IntVar(&p.gRPCOauthPort, "oauth-grpc-port", grpc_oauth_port, "oauth gRPC port")
 	port, err := strconv.Atoi(os.Getenv("SERVER_PORT"))
 	if err != nil {
 		port = 0
