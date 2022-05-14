@@ -25,6 +25,7 @@ func (p *adminFrontendCmd) addHomePageHandler() error {
 				http.Error(rw, err.Error(), http.StatusInternalServerError)
 				return
 			}
+			session.Save(r, rw)
 			if v, found := session.Values["userLoggedIn"].(bool); found && v {
 				rw.Header().Set("Cache-Control", "no-store, must-revalidate")
 				rw.Header().Set("Pragma", "no-cache")
