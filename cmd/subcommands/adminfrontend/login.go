@@ -60,7 +60,38 @@ func (p *adminFrontendCmd) addLoginPageHandler() error {
 				fmt.Fprint(rw, strings.Replace(output, "$xsrf_token", secureXsrf, 1))
 			})
 			webimizer.Post(rw, r, func(rw http.ResponseWriter, r *http.Request) {
-				fmt.Fprint(rw, "HTTP POST method was used. Not implemented yet")
+				err = r.ParseForm()
+				if err != nil {
+					http.Error(rw, err.Error(), http.StatusBadRequest)
+					return
+				}
+				token := r.FormValue("xsrf_token")
+				if token == "" {
+					http.Error(rw, "no xsrf_token provided", http.StatusBadRequest)
+					return
+				}
+				var realToken string
+				securecookie.New(*reverseBytes(hashKey), *reverseBytes(cryptoKey)).Decode("xsrf_token", token, &realToken)
+				if realToken == "" {
+					http.Error(rw, "cannot decode xsrf_token value", http.StatusBadRequest)
+					return
+				}
+				if _, exists := session.Values["xsrf_token"]; !exists {
+					http.Error(rw, "no xsrf_token value stored in current session", http.StatusBadRequest)
+					return
+				}
+				sessToken := session.Values["xsrf_token"].(string)
+				if sessToken != realToken {
+					http.Error(rw, "xsrf_token value is not valid for this session: "+sessToken+" "+realToken, http.StatusBadRequest)
+					return
+				}
+				valid := xsrftoken.Valid(realToken, p.hashKey, session.ID, "oauth")
+				if valid {
+					fmt.Fprintln(rw, "xsrf_token is valid")
+				} else {
+					http.Error(rw, "xsrf_token expired", http.StatusBadRequest)
+					return
+				}
 			})
 		}), // webimizer.HttpHandler call only if method is allowed
 		NotAllowHandler: webimizer.HttpNotAllowHandler(httpNotAllowFunc), // webimizer.HtttpNotAllowHandler call if method is not allowed
