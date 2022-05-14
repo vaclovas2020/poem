@@ -5,13 +5,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
   <title>{{.PageTitle}}</title>
 </head>
 
 <body class="bg-dark text-white">
-  <div class="container">
-    <h1>Login</h1>
+  <div class="container" style="max-width: 512px;">
     <img style="width: 250px;margin: 0 auto;display: block;" src="/assets/img/poem_logo.png" alt="Logo" />
     <form method="POST" action="{{.LoginActionUrl}}">
       <div class="form-group">

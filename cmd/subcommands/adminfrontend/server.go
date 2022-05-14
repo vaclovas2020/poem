@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"webimizer.dev/poem/cmd/subcommands/adminfrontend/static"
 	"webimizer.dev/webimizer"
 )
 
@@ -24,6 +25,7 @@ func (p *adminFrontendCmd) runServer() {
 		{"pragma", "no-cache"},
 	} // define web application default HTTP response headers
 	p.initSession()
+	static.ServeStaticFiles()
 	http.Handle("/assets/",
 		webimizer.HttpHandler(func(rw http.ResponseWriter, r *http.Request) {
 			http.FileServer(http.FS(content)).ServeHTTP(rw, r)
