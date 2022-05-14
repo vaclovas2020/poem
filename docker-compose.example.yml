@@ -45,6 +45,8 @@ services:
       MYSQL_PASSWORD: examplepass
       CMS_USER: admin
       CMS_PASSWORD: password123
+      HASH_KEY: "r6AU4ArEbR5DF55sHQQRZQVBTqNPf5JF"
+      CRYPTO_KEY: "Kbb22QSGXta8BhMXQUqxsddqfZuB48dm"
     volumes:
      - sessions:/go/sessions 
     command: admin-frontend
