@@ -2,7 +2,7 @@
 Copyright (c) 2022, Vaclovas Lapinskis. All rights reserved.
 */
 
-/* poems server subcommand */
+/* admin server subcommand */
 package adminserver
 
 import (
