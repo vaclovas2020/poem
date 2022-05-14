@@ -20,7 +20,10 @@ func (p *adminFrontendCmd) runServer() {
 		{"x-content-type-options", "nosniff"},
 		{"x-frame-options", "SAMEORIGIN"},
 		{"x-xss-protection", "1; mode=block"},
+		{"cache-control", "no-cache"},
+		{"pragma", "no-cache"},
 	} // define web application default HTTP response headers
+	p.initSession()
 	http.Handle("/assets/",
 		webimizer.HttpHandler(func(rw http.ResponseWriter, r *http.Request) {
 			http.FileServer(http.FS(content)).ServeHTTP(rw, r)

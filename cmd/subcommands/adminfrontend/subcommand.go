@@ -26,12 +26,14 @@ type adminFrontendCmd struct {
 	mysqlUser     string // mysql username
 	mysqlPassword string // mysql password
 	mysqlDatabase string // mysql database name
+	hashKey       string // session hash key
+	cryptoKey     string // session crypto key
 }
 
 func (*adminFrontendCmd) Name() string     { return "admin-frontend" }
 func (*adminFrontendCmd) Synopsis() string { return "Start admin frontend server" }
 func (*adminFrontendCmd) Usage() string {
-	return `admin-frontend [-host] [-port] [-grpc-host] [-grpc-port] [-mysql-host] [-mysql-port] [-mysql-user] [-mysql-password] [-mysql-database]:
+	return `admin-frontend [-host] [-port] [-grpc-host] [-grpc-port] [-mysql-host] [-mysql-port] [-mysql-user] [-mysql-password] [-mysql-database] [-hash-key] [-crypto-key]:
 	Start admin frontend server
 `
 }
@@ -59,6 +61,8 @@ func (p *adminFrontendCmd) SetFlags(f *flag.FlagSet) {
 	f.StringVar(&p.mysqlUser, "mysql-user", os.Getenv("MYSQL_USER"), "mysql user")
 	f.StringVar(&p.mysqlPassword, "mysql-password", os.Getenv("MYSQL_PASSWORD"), "mysql password")
 	f.StringVar(&p.mysqlDatabase, "mysql-database", os.Getenv("MYSQL_DATABASE"), "mysql database name")
+	f.StringVar(&p.hashKey, "hash-key", os.Getenv("HASH_KEY"), "session hash key")
+	f.StringVar(&p.cryptoKey, "crypto-key", os.Getenv("CRYPTO_KEY"), "session crypto key")
 }
 
 /* Execute subcommand */

@@ -45,6 +45,8 @@ services:
       MYSQL_PASSWORD: examplepass
       CMS_USER: admin
       CMS_PASSWORD: password123
+    volumes:
+     - sessions:/go/sessions 
     command: admin-frontend
   db:
     image: mysql:5.7
@@ -59,3 +61,4 @@ services:
 
 volumes:
   db:
+  sessions:
