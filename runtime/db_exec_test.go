@@ -29,9 +29,9 @@ func TestExcecDb(t *testing.T) {
 	db, mock := newMock()
 	mock.ExpectExec("Test").WillReturnResult(sqlmock.NewResult(0, 1))
 	obj := &newDbObj{Test: "Test"}
-	err := runtime.ExecDb(db, obj, func(db *sql.DB, obj *newDbObj) (sql.Result, error) { return db.Exec(obj.Test) })
+	_, err := runtime.ExecDb(db, obj, func(db *sql.DB, obj *newDbObj) (sql.Result, error) { return db.Exec(obj.Test) })
 	assert.NoError(t, err)
 	mock.ExpectExec("Test").WillReturnError(fmt.Errorf("Testing error handler"))
-	err = runtime.ExecDb(db, obj, func(db *sql.DB, obj *newDbObj) (sql.Result, error) { return db.Exec(obj.Test) })
+	_, err = runtime.ExecDb(db, obj, func(db *sql.DB, obj *newDbObj) (sql.Result, error) { return db.Exec(obj.Test) })
 	assert.Error(t, err)
 }

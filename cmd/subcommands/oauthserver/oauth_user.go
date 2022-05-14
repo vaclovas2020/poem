@@ -15,6 +15,7 @@ func (srv *oAuthServer) AuthUser(_ context.Context, request *oauth.AuthRequest) 
 	if err != nil {
 		return nil, err
 	}
+	defer db.Close()
 	row := runtime.QueryRowDb(db, request, func(db *sql.DB, request *oauth.AuthRequest) *sql.Row {
 		return db.QueryRow("SELECT user_email, password_hash, user_role FROM `poem_users` WHERE user_email = ? AND user_role = ?;", request.Email, request.Role.String())
 	})

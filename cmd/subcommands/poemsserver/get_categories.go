@@ -18,6 +18,7 @@ func (srv *poemsServer) GetCategories(ctx context.Context, req *poems.Categories
 	if err != nil {
 		return nil, err
 	}
+	defer db.Close()
 	categoriesMap, err := srv.cmd.getCategories(db, req.Status.String())
 	if err != nil {
 		return nil, err

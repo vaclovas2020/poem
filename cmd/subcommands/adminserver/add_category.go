@@ -18,7 +18,8 @@ func (srv *adminServer) AddCategory(_ context.Context, category *admin.AdminCate
 	if err != nil {
 		return nil, err
 	}
-	err = runtime.ExecDb(db, category, func(db *sql.DB, category *admin.AdminCategory) (sql.Result, error) {
+	defer db.Close()
+	_, err = runtime.ExecDb(db, category, func(db *sql.DB, category *admin.AdminCategory) (sql.Result, error) {
 		return db.Exec("INSERT INTO `poem_categories`(name,slug,status) VALUES (?,?,?);", category.Name, category.Slug, category.Status.String())
 	})
 	if err != nil {

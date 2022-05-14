@@ -18,6 +18,7 @@ func (srv *poemsServer) GetPoems(ctx context.Context, req *poems.PoemsRequest) (
 	if err != nil {
 		return nil, err
 	}
+	defer db.Close()
 	poemsMap, err := srv.cmd.getPoems(db, req.Category)
 	if err != nil {
 		return nil, err
