@@ -36,6 +36,6 @@ func (srv *oAuthServer) AuthUser(_ context.Context, request *oauth.AuthRequest) 
 		return response, nil
 	}
 	response.Success = true
-	response.User = &oauth.User{Name: email, Role: request.Role}
+	response.User = &oauth.User{Email: email, Role: request.Role}
 	return response, nil
 }
