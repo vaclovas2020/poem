@@ -15,6 +15,7 @@ type homeTemplateParams struct {
 	HomeTitle       string // home page title
 	LogoutTitle     string // logout title
 	CopyrightText   string // footer copyright text
+	UserEmail       string // current user email
 }
 
 func (p *adminFrontendCmd) addHomePageHandler() error {
@@ -36,6 +37,7 @@ func (p *adminFrontendCmd) addHomePageHandler() error {
 					PoemsTitle:      "Poems",
 					PageTitle:       "Admin dashboard | Poem CMS",
 					CopyrightText:   "Copyright © 2022 Vaclovas Lapinskis",
+					UserEmail:       session.Values["email"].(string),
 				}
 				output, err := runtime.TemplateParse(templates, "template/home.html", obj)
 				if err != nil {
