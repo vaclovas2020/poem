@@ -52,6 +52,11 @@ func (p *adminFrontendCmd) addLoginPageHandler() error {
 					http.Error(rw, err.Error(), http.StatusInternalServerError)
 					return
 				}
+				err = session.Save(r, rw)
+				if err != nil {
+					http.Error(rw, err.Error(), http.StatusInternalServerError)
+					return
+				}
 				fmt.Fprint(rw, strings.Replace(output, "$xsrf_token", secureXsrf, 1))
 			})
 			webimizer.Post(rw, r, func(rw http.ResponseWriter, r *http.Request) {
