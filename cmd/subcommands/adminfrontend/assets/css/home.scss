@@ -1,0 +1,38 @@
+.dashboard-items{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    padding: 1em 0;
+    .dashboard-item{
+        a {
+            color: white;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            span{
+                text-align: center;
+            }
+        }
+        .svg > svg{
+            width: 100%;
+            height: auto;
+        }
+    }
+    @media (max-width: 1023.99px){
+        flex-direction: column;
+        gap: 20px;
+        .dashboard-item{   
+            flex-basis: calc(100% - 40px);
+            width: calc(100% - 40px);
+            margin-bottom: 1em;
+        }
+    }
+    @media (min-width: 1024px){
+        gap: 60px;
+        .dashboard-item{
+            flex-basis: calc(100%/3 - 40px);
+            width: calc(100%/3 - 40px);
+        }
+    }
+}

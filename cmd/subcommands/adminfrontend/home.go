@@ -12,34 +12,38 @@ type homeTemplateParams struct {
 	CategoriesTitle string // categories page link title
 	PoemsTitle      string // poems page link title
 	PageTitle       string // page title
+	HomeTitle       string // home page title
+	LogoutTitle     string // logout title
 	CopyrightText   string // footer copyright text
 }
 
 func (p *adminFrontendCmd) addHomePageHandler() error {
-	obj := &homeTemplateParams{
-		CategoriesTitle: "Categories",
-		PoemsTitle:      "Poems",
-		PageTitle:       "Login | Poem CMS",
-		CopyrightText:   "Copyright © 2022 Vaclovas Lapinskis",
-	}
-	output, err := runtime.TemplateParse(templates, "template/home.html", obj)
-	if err != nil {
-		return err
-	}
 	http.Handle("/", webimizer.HttpHandlerStruct{
 		Handler: webimizer.HttpHandler(func(rw http.ResponseWriter, r *http.Request) {
+			obj := &homeTemplateParams{
+				HomeTitle:       "Dashboard",
+				LogoutTitle:     "Logout",
+				CategoriesTitle: "Categories",
+				PoemsTitle:      "Poems",
+				PageTitle:       "Admin dashboard | Poem CMS",
+				CopyrightText:   "Copyright © 2022 Vaclovas Lapinskis",
+			}
+			output, err := runtime.TemplateParse(templates, "template/home.html", obj)
+			if err != nil {
+				http.Error(rw, err.Error(), http.StatusInternalServerError)
+				return
+			}
 			session, err := store.Get(r, "sid")
 			if err != nil {
 				http.Error(rw, err.Error(), http.StatusInternalServerError)
 				return
 			}
-			if v, found := session.Values["userLoggedIn"]; found {
-				valid := v.(bool)
-				if valid {
-					fmt.Fprint(rw, output)
-				}
+			if v, found := session.Values["userLoggedIn"].(bool); found && v {
+				fmt.Fprint(rw, output)
+				return
 			} else {
 				http.Redirect(rw, r, "/login", http.StatusMovedPermanently)
+				return
 			}
 		}), // webimizer.HttpHandler call only if method is allowed
 		NotAllowHandler: webimizer.HttpNotAllowHandler(httpNotAllowFunc), // webimizer.HtttpNotAllowHandler call if method is not allowed

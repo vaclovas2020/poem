@@ -18,16 +18,22 @@
     <form method="POST" action="{{.LoginActionUrl}}">
       <div class="form-group">
         <label for="email">Username</label>
-        <input type="text" class="form-control" id="username" autocomplete="username" placeholder="Enter username">
+        <input type="text" class="form-control" name="username" id="username" autocomplete="username"
+          placeholder="Enter username">
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" autocomplete="current-password"
+        <input type="password" class="form-control" name="password" id="password" autocomplete="current-password"
           placeholder="Password">
       </div>
-      <input type="hidden" name="xsrf_token" value="$xsrf_token" />
+      <input type="hidden" name="xsrf_token" value="{{.XsrfToken}}" />
       <button style="margin: 1em 0;" type="submit" class="btn btn-primary">Login</button>
     </form>
+    {{if .Message}}
+    <div class="alert alert-danger" role="alert">
+      {{.Message}}
+    </div>
+    {{end}}
   </div>
   <footer class="footer">
     <div class="container-fluid">

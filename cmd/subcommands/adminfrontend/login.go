@@ -3,10 +3,11 @@ package adminfrontend
 import (
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/gorilla/securecookie"
+	"github.com/gorilla/sessions"
 	"golang.org/x/net/xsrftoken"
+	"webimizer.dev/poem/oauth"
 	"webimizer.dev/poem/runtime"
 	"webimizer.dev/webimizer"
 )
@@ -16,6 +17,7 @@ type loginTemplateParams struct {
 	LoginActionUrl string // login form action url
 	CopyrightText  string // footer copyright text
 	XsrfToken      string // secure xsrf_token
+	Message        string // form error message (optional)
 }
 
 func httpNotAllowFunc(rw http.ResponseWriter, r *http.Request) {
@@ -23,16 +25,41 @@ func httpNotAllowFunc(rw http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(rw, "Bad Request")
 }
 
-func (p *adminFrontendCmd) addLoginPageHandler() error {
+func (p *adminFrontendCmd) generateNewTokenAndShowLogin(session *sessions.Session, rw http.ResponseWriter, r *http.Request) {
+	var (
+		hashKey   = []byte(p.hashKey)
+		cryptoKey = []byte(p.cryptoKey)
+	)
+	xsrf := xsrftoken.Generate(p.hashKey, session.ID, "oauth")
+	session.Values["xsrf_token"] = xsrf
+	secureXsrf, err := securecookie.New(*reverseBytes(hashKey), *reverseBytes(cryptoKey)).Encode("xsrf_token", xsrf)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	obj := &loginTemplateParams{
 		PageTitle:      "Login | Poem CMS",
 		LoginActionUrl: "/login",
 		CopyrightText:  "Copyright © 2022 Vaclovas Lapinskis",
+		XsrfToken:      secureXsrf,
+	}
+	for _, v := range session.Flashes() {
+		obj.Message = v.(string)
+	}
+	err = session.Save(r, rw)
+	if err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	output, err := runtime.TemplateParse(templates, "template/login.html", obj)
 	if err != nil {
-		return err
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
 	}
+	fmt.Fprint(rw, output)
+}
+
+func (p *adminFrontendCmd) addLoginPageHandler() error {
 	http.Handle("/login", webimizer.HttpHandlerStruct{
 		Handler: webimizer.HttpHandler(func(rw http.ResponseWriter, r *http.Request) {
 			var (
@@ -44,20 +71,12 @@ func (p *adminFrontendCmd) addLoginPageHandler() error {
 				http.Error(rw, err.Error(), http.StatusInternalServerError)
 				return
 			}
+			if v, found := session.Values["userLoggedIn"].(bool); found && v {
+				http.Redirect(rw, r, "/", http.StatusMovedPermanently)
+				return
+			}
 			webimizer.Get(rw, r, func(rw http.ResponseWriter, r *http.Request) {
-				xsrf := xsrftoken.Generate(p.hashKey, session.ID, "oauth")
-				session.Values["xsrf_token"] = xsrf
-				secureXsrf, err := securecookie.New(*reverseBytes(hashKey), *reverseBytes(cryptoKey)).Encode("xsrf_token", xsrf)
-				if err != nil {
-					http.Error(rw, err.Error(), http.StatusInternalServerError)
-					return
-				}
-				err = session.Save(r, rw)
-				if err != nil {
-					http.Error(rw, err.Error(), http.StatusInternalServerError)
-					return
-				}
-				fmt.Fprint(rw, strings.Replace(output, "$xsrf_token", secureXsrf, 1))
+				p.generateNewTokenAndShowLogin(session, rw, r)
 			})
 			webimizer.Post(rw, r, func(rw http.ResponseWriter, r *http.Request) {
 				err = r.ParseForm()
@@ -66,8 +85,11 @@ func (p *adminFrontendCmd) addLoginPageHandler() error {
 					return
 				}
 				token := r.FormValue("xsrf_token")
-				if token == "" {
-					http.Error(rw, "no xsrf_token provided", http.StatusBadRequest)
+				username := r.FormValue("username")
+				password := r.FormValue("password")
+				if token == "" || username == "" || password == "" {
+					session.AddFlash("Please enter all form fields")
+					p.generateNewTokenAndShowLogin(session, rw, r)
 					return
 				}
 				var realToken string
@@ -87,7 +109,29 @@ func (p *adminFrontendCmd) addLoginPageHandler() error {
 				}
 				valid := xsrftoken.Valid(realToken, p.hashKey, session.ID, "oauth")
 				if valid {
-					fmt.Fprintln(rw, "xsrf_token is valid")
+					response, err := p.grpcAuthUser(&oauth.AuthRequest{Username: username, Password: password, Role: oauth.UserRole_admin})
+					if err != nil {
+						session.AddFlash(err.Error())
+						p.generateNewTokenAndShowLogin(session, rw, r)
+						return
+					}
+					if response.Success {
+						session, err = session.Store().New(r, "sid")
+						if err != nil {
+							http.Error(rw, err.Error(), http.StatusInternalServerError)
+							return
+						}
+						session.Values["userLoggedIn"] = true
+						session.Values["username"] = response.User.Name
+						session.Values["role"] = response.User.Role.String()
+						session.Save(r, rw)
+						http.Redirect(rw, r, "/", http.StatusMovedPermanently)
+						return
+					} else {
+						session.AddFlash("Invalid username or password")
+						p.generateNewTokenAndShowLogin(session, rw, r)
+						return
+					}
 				} else {
 					http.Error(rw, "xsrf_token expired", http.StatusBadRequest)
 					return
