@@ -31,14 +31,19 @@ func (srv *oAuthServer) NewUser(_ context.Context, request *oauth.AuthRequest) (
 		response.Success = false
 		return response, err
 	}
-	_, err = runtime.ExecDb(db, request, func(db *sql.DB, request *oauth.AuthRequest) (sql.Result, error) {
+	result, err := runtime.ExecDb(db, request, func(db *sql.DB, request *oauth.AuthRequest) (sql.Result, error) {
 		return db.Exec("INSERT INTO `poem_users`(user_email, password_hash, user_role) VALUES(?,?,?);", request.Email, string(hashBytes), request.Role.String())
 	})
 	if err != nil {
 		response.Success = false
 		return response, err
 	}
+	userId, err := result.LastInsertId()
+	if err != nil {
+		response.Success = false
+		return response, err
+	}
 	response.Success = true
-	response.User = &oauth.User{Email: email, Role: request.Role}
+	response.User = &oauth.User{UserId: userId, Email: email, Role: request.Role}
 	return response, nil
 }

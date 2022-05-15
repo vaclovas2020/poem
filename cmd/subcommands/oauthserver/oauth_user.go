@@ -17,13 +17,14 @@ func (srv *oAuthServer) AuthUser(_ context.Context, request *oauth.AuthRequest) 
 	}
 	defer db.Close()
 	row := runtime.QueryRowDb(db, request, func(db *sql.DB, request *oauth.AuthRequest) *sql.Row {
-		return db.QueryRow("SELECT user_email, password_hash, user_role FROM `poem_users` WHERE user_email = ? AND user_role = ?;", request.Email, request.Role.String())
+		return db.QueryRow("SELECT user_id, user_email, password_hash, user_role FROM `poem_users` WHERE user_email = ? AND user_role = ?;", request.Email, request.Role.String())
 	})
 	response = new(oauth.AuthResponse)
+	var userId int
 	var email string
 	var role string
 	var password_hash string
-	err = row.Scan(&email, &password_hash, &role)
+	err = row.Scan(&userId, &email, &password_hash, &role)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			response.Success = false
@@ -37,6 +38,6 @@ func (srv *oAuthServer) AuthUser(_ context.Context, request *oauth.AuthRequest) 
 		return response, nil
 	}
 	response.Success = true
-	response.User = &oauth.User{Email: email, Role: request.Role}
+	response.User = &oauth.User{UserId: int64(userId), Email: email, Role: request.Role}
 	return response, nil
 }

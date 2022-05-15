@@ -26,6 +26,7 @@ message AdminPoem {
   string title = 1;
   string text = 2;
   int32 categoryId = 3;
+  int64 userId = 4;
 }
 
 message AdminCategory {
@@ -36,4 +37,5 @@ message AdminCategory {
     DRAFT = 1;
   }
   Status status = 3;
+  int64 userId = 4;
 }
