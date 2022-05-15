@@ -12,6 +12,13 @@ By developing this project, I learned:
 3. How to create CLI subcommands. [Go to source code](https://github.com/vaclovas2020/poem/blob/main/cmd/subcommands/subcommands.go)
 4. How to create generic function to handle multiple types. [Sql ExecDB generic function](https://github.com/vaclovas2020/poem/blob/main/runtime/db_exec.go) [Sql QueryRowDB generic function](https://github.com/vaclovas2020/poem/blob/main/runtime/db_query_row.go) [Sql QueryDB generic function](https://github.com/vaclovas2020/poem/blob/main/runtime/db_query.go) [Template generic function](https://github.com/vaclovas2020/poem/blob/main/runtime/generic_template.go)
 
+Used technologies in project:
+1. Docker
+2. Docker compose
+3. Go (backend services)
+4. gRPC framework (Protocol Buffers)
+5. Bootstrap 5.1.3 (frontend)
+
 Test coverage:
 
 webimizer.dev/poem/runtime	0.004s	coverage: 100.0% of statements
