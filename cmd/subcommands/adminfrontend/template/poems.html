@@ -2,6 +2,7 @@
 <html lang="en">
 {{$xsrf := .XsrfToken}}
 {{$actionUrl := .ActionUrl}}
+{{$categories := .Categories}}
 
 <head>
   <meta charset="utf-8">
@@ -57,6 +58,90 @@
     </div>
     {{end}}
     {{if .Categories}}
+    {{if .Poems}}
+    <h2 class="mt-4 mb-4">Poems</h2>
+    <ul class="mt-4 mb-4 list-group">
+      {{range $index, $element := .Poems}}
+      <li class="list-group-item">{{.Title}} <br />Category: {{.CategoryName}}<br />
+        <button type="button" class="btn btn-dager" data-bs-toggle="modal" data-bs-target="#deleteModal-{{$index}}">
+          Delete
+        </button>
+        <div class="modal fade" id="deleteModal-{{$index}}" tabindex="-1" role="dialog"
+          aria-labelledby="deleteModal-{{$index}}Label" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="deleteModal-{{$index}}Label">Are you sure?</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                Are you sure want to delete this poem?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <form method="POST" action="{{$actionUrl}}">
+                  <input type="hidden" name="xsrf_token" value="{{$xsrf}}" />
+                  <input type="hidden" name="poem_id" value="{{$index}}" />
+                  <input type="hidden" name="action" value="delete" />
+                  <button type="submit" class="btn btn-danger">Delete poem</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-dager" data-bs-toggle="modal" data-bs-target="#editModal-{{$index}}">
+          Edit
+        </button>
+        <div class="modal fade" id="editModal-{{$index}}" tabindex="-1" role="dialog"
+          aria-labelledby="editModal-{{$index}}Label" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <form method="POST" action="{{$actionUrl}}">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="editModal-{{$index}}Label">Edit poem</h5>
+                  <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class="form-group">
+                    <label for="category_id">Select category:</label>
+                    <select class="form-select" name="category_id" aria-label="Select category">
+                      {{range $i, $category := $categories}}
+                      <option{{if eq $element.CategoryId $i}} selected{{end}} value="{{$i}}">{{.Name}}</option>
+                      {{end}}
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="name">Poem title:</label>
+                    <input type="text" class="form-control" value="{{.Title}}" name="title" autocomplete="off" placeholder="Enter poem title">
+                  </div>
+                  <div class="form-group">
+                    <label for="name">Poem text:</label>
+                    <textarea class="form-control" rows="5" name="text" autocomplete="off" placeholder="Enter poem text">{{.Text}}</textarea>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <input type="hidden" name="xsrf_token" value="{{$xsrf}}" />
+                  <input type="hidden" name="poem_id" value="{{$index}}" />
+                  <input type="hidden" name="action" value="update" />
+                  <button type="submit" class="btn btn-primary">Update poem</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </li>
+      {{end}}
+    </ul>
+    {{else}}
+    <div class="alert alert-info" role="alert">
+      No poems created yet. Please create first poem.
+    </div>
+    {{end}}
     <form class="mt-4 mb-4" method="POST" action="{{$actionUrl}}">
       <h2>Create new poem</h2>
       <div class="form-group">
@@ -81,7 +166,7 @@
     </form>
     {{else}}
     <div class="alert alert-danger" role="alert">
-      You need to create atleast one category if want to create poem. <a class="btn btn-primary" role="button"
+      You need to create at least one category first if you want to create poem. <a class="btn btn-primary" role="button"
         href="/categories">Create category now</a>
     </div>
     {{end}}
