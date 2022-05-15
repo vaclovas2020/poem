@@ -18,6 +18,14 @@ type homeTemplateParams struct {
 	UserEmail       string // current user email
 }
 
+type homeGuestParams struct {
+	LoginTitle    string // login page title
+	RegisterTitle string // register page title
+	PageTitle     string // page title
+	HomeTitle     string // home page title
+	CopyrightText string // footer copyright text
+}
+
 func (p *adminFrontendCmd) addHomePageHandler() error {
 	http.Handle("/", webimizer.HttpHandlerStruct{
 		Handler: webimizer.HttpHandler(func(rw http.ResponseWriter, r *http.Request) {
@@ -49,7 +57,19 @@ func (p *adminFrontendCmd) addHomePageHandler() error {
 			} else {
 				rw.Header().Set("Cache-Control", "no-store, must-revalidate")
 				rw.Header().Set("Pragma", "no-cache")
-				http.Redirect(rw, r, "/login", http.StatusFound)
+				obj := &homeGuestParams{
+					HomeTitle:     "Dashboard",
+					LoginTitle:    "Login",
+					RegisterTitle: "Register",
+					PageTitle:     "Cloud-based platform for poets & writers | Poem CMS",
+					CopyrightText: "Copyright © 2022 Vaclovas Lapinskis",
+				}
+				output, err := runtime.TemplateParse(templates, "template/home-guest.html", obj)
+				if err != nil {
+					http.Error(rw, err.Error(), http.StatusInternalServerError)
+					return
+				}
+				fmt.Fprint(rw, output)
 				return
 			}
 		}), // webimizer.HttpHandler call only if method is allowed
