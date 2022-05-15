@@ -48,6 +48,8 @@ services:
       ADMIN_RPC_PORT: 7790
       OAUTH_RPC_HOST: oauth_rpc
       OAUTH_RPC_PORT: 7792
+      POEMS_RPC_HOST: poems_rpc
+      POEMS_RPC_PORT: 7789
       MYSQL_HOST: db
       MYSQL_PORT: 3306
       MYSQL_DATABASE: exampledb

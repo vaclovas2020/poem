@@ -21,8 +21,10 @@ type adminFrontendCmd struct {
 	port          int    // server port number
 	gRPCAdminHost string // admin gRPC admin hostname
 	gRPCAdminPort int    // admin gRPC admin port number
-	gRPCOauthHost string // admin gRPC oauth hostname
-	gRPCOauthPort int    // admin gRPC oauth port number
+	gRPCOauthHost string // oauth gRPC oauth hostname
+	gRPCOauthPort int    // oauth gRPC oauth port number
+	gRPCPoemsHost string // poems gRPC oauth hostname
+	gRPCPoemsPort int    // poems gRPC oauth port number
 	mysqlHost     string // mysql hostname
 	mysqlPort     int    // mysql port
 	mysqlUser     string // mysql username
@@ -35,7 +37,7 @@ type adminFrontendCmd struct {
 func (*adminFrontendCmd) Name() string     { return "admin-frontend" }
 func (*adminFrontendCmd) Synopsis() string { return "Start admin frontend server" }
 func (*adminFrontendCmd) Usage() string {
-	return `admin-frontend [-host] [-port] [-admin-grpc-host] [-admin-grpc-port] [-mysql-host] [-mysql-port] [-mysql-user] [-mysql-password] [-mysql-database] [-hash-key] [-crypto-key]:
+	return `admin-frontend [-host] [-port] [-admin-grpc-host] [-admin-grpc-port] [-oauth-grpc-host] [-oauth-grpc-port] [-poems-grpc-host] [-poems-grpc-port] [-mysql-host] [-mysql-port] [-mysql-user] [-mysql-password] [-mysql-database] [-hash-key] [-crypto-key]:
 	Start admin frontend server
 `
 }
@@ -54,6 +56,12 @@ func (p *adminFrontendCmd) SetFlags(f *flag.FlagSet) {
 	}
 	f.StringVar(&p.gRPCOauthHost, "oauth-grpc-host", os.Getenv("OAUTH_RPC_HOST"), "oauth gRPC hostname")
 	f.IntVar(&p.gRPCOauthPort, "oauth-grpc-port", grpc_oauth_port, "oauth gRPC port")
+	grpc_poems_port, err := strconv.Atoi(os.Getenv("POEMS_RPC_PORT"))
+	if err != nil {
+		grpc_port = 0
+	}
+	f.StringVar(&p.gRPCPoemsHost, "poems-grpc-host", os.Getenv("POEMS_RPC_HOST"), "poems gRPC hostname")
+	f.IntVar(&p.gRPCPoemsPort, "poems-grpc-port", grpc_poems_port, "poems gRPC port")
 	port, err := strconv.Atoi(os.Getenv("SERVER_PORT"))
 	if err != nil {
 		port = 0
