@@ -8,6 +8,10 @@ service Admin {
   rpc AddPoem (AdminPoem) returns (PoemResponse) {}
   // Add new category
   rpc AddCategory (AdminCategory) returns (CategoryResponse) {}
+  // Edit category
+  rpc EditCategory (AdminCategoryEdit) returns (CategoryEditResponse) {}
+  // Delete category
+  rpc DeleteCategory (DeleteCategoryRequest) returns (DeleteCategoryResponse) {}
 }
 
 // The response message containing poem  object content.
@@ -20,6 +24,20 @@ message PoemResponse  {
 message CategoryResponse  {
     bool success = 1;
     AdminCategory category = 2;
+}
+
+message CategoryEditResponse  {
+  bool success = 1;
+  AdminCategoryEdit category = 2;
+}
+
+message DeleteCategoryRequest {
+  int32 categoryId = 1;
+  int64 userId = 2;
+}
+
+message DeleteCategoryResponse {
+  bool success = 1;
 }
 
 message AdminPoem {
@@ -38,4 +56,16 @@ message AdminCategory {
   }
   Status status = 3;
   int64 userId = 4;
+}
+
+message AdminCategoryEdit {
+  string name = 1;
+  string slug = 2;
+  enum Status {
+    PUBLISHED = 0;
+    DRAFT = 1;
+  }
+  Status status = 3;
+  int64 userId = 4;
+  int32 categoryId = 5;
 }

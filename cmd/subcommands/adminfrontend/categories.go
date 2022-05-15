@@ -3,6 +3,7 @@ package adminfrontend
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
@@ -98,10 +99,21 @@ func (p *adminFrontendCmd) addCategoriesPageHandler() {
 						errorMsg(rw, err, http.StatusBadRequest)
 						return
 					}
+					action := r.FormValue("action")
+					if action == "" {
+						errorMsg(rw, fmt.Errorf("action parameter is required"), http.StatusBadRequest)
+						return
+					}
 					token := r.FormValue("xsrf_token")
 					name := r.FormValue("name")
-					if token == "" || name == "" {
+					category_id := r.FormValue("category_id")
+					if (token == "" || name == "") && action == "create" {
 						session.AddFlash("Please enter category name")
+						p.renderCategoriesPage(session, rw, r)
+						return
+					}
+					if (token == "" || category_id == "") && action == "delete" {
+						session.AddFlash("Please enter category Id")
 						p.renderCategoriesPage(session, rw, r)
 						return
 					}
@@ -122,16 +134,37 @@ func (p *adminFrontendCmd) addCategoriesPageHandler() {
 					}
 					valid := xsrftoken.Valid(realToken, p.hashKey, session.ID, "add_category")
 					if valid {
-						response, err := p.grpcAddCategory(&admin.AdminCategory{Name: name, Slug: runtime.GenerateSlug(name), Status: admin.AdminCategory_PUBLISHED, UserId: session.Values["userId"].(int64)})
-						if err != nil {
-							errorMsg(rw, err, http.StatusInternalServerError)
-							return
+						switch action {
+						case "create":
+							response, err := p.grpcAddCategory(&admin.AdminCategory{Name: name, Slug: runtime.GenerateSlug(name), Status: admin.AdminCategory_PUBLISHED, UserId: session.Values["userId"].(int64)})
+							if err != nil {
+								errorMsg(rw, err, http.StatusInternalServerError)
+								return
+							}
+							if !response.Success {
+								session.AddFlash("Cannot add new category")
+							}
+							p.renderCategoriesPage(session, rw, r)
+							break
+						case "delete":
+							categoryId, err := strconv.ParseInt(category_id, 10, 32)
+							if err != nil {
+								errorMsg(rw, err, http.StatusInternalServerError)
+								return
+							}
+							response, err := p.grpcDeleteCategory(&admin.DeleteCategoryRequest{CategoryId: int32(categoryId), UserId: session.Values["userId"].(int64)})
+							if err != nil {
+								errorMsg(rw, err, http.StatusInternalServerError)
+								return
+							}
+							if !response.Success {
+								session.AddFlash("Cannot delete category")
+							}
+							p.renderCategoriesPage(session, rw, r)
+							break
+						default:
+							break
 						}
-						if !response.Success {
-							session.AddFlash("Cannot add new category")
-						}
-						p.renderCategoriesPage(session, rw, r)
-						return
 					} else {
 						errorMsg(rw, fmt.Errorf("xsrf_token expired"), http.StatusBadRequest)
 						return

@@ -1,5 +1,7 @@
 <!doctype html>
 <html lang="en">
+{{$xsrf := .XsrfToken}}
+{{$actionUrl := .ActionUrl}}
 
 <head>
   <meta charset="utf-8">
@@ -57,11 +59,42 @@
     {{if .Categories}}
     <h2 class="mt-4 mb-4">Categories</h2>
     <div class="alert alert-warning" role="alert">
-      Notice: you cannot delete or update categories right now.
+      Notice: you cannot update categories right now.
     </div>
     <ul class="mt-4 mb-4 list-group">
       {{range $index, $element := .Categories}}
-      <li data-index="{{$index}}" class="list-group-item">{{$element.Name}}</li>
+      <li class="list-group-item">{{$element.Name}}
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-dager" data-bs-toggle="modal" data-bs-target="#deleteModal-{{$index}}">
+          Delete
+        </button>
+        <!-- Modal -->
+        <div class="modal fade" id="deleteModal-{{$index}}" tabindex="-1" role="dialog"
+          aria-labelledby="deleteModal-{{$index}}Label" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="deleteModal-{{$index}}Label">Are you sure?</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                Are you sure want to delete this category?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <form method="POST" action="{{$actionUrl}}">
+                  <input type="hidden" name="xsrf_token" value="{{$xsrf}}" />
+                  <input type="hidden" name="category_id" value="{{$index}}" />
+                  <input type="hidden" name="action" value="delete" />
+                  <button type="submit" class="btn btn-danger">Delete category</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
       {{end}}
     </ul>
     {{else}}
@@ -69,14 +102,14 @@
       No categories created yet. Please create first category.
     </div>
     {{end}}
-    <form method="POST" action="{{.ActionUrl}}">
+    <form method="POST" action="{{$actionUrl}}">
       <h2>Create new category</h2>
       <div class="form-group">
         <label for="name">Category name</label>
-        <input type="text" class="form-control" name="name" id="name" autocomplete="off"
-          placeholder="Enter email">
+        <input type="text" class="form-control" name="name" id="name" autocomplete="off" placeholder="Enter email">
       </div>
-      <input type="hidden" name="xsrf_token" value="{{.XsrfToken}}" />
+      <input type="hidden" name="xsrf_token" value="{{$xsrf}}" />
+      <input type="hidden" name="action" value="create" />
       <button style="margin: 1em 0;" type="submit" class="btn btn-primary">{{.SubmitButton}}</button>
     </form>
   </div>
