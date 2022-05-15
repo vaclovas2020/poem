@@ -21,9 +21,9 @@ Used technologies in project:
 - Oauth gRPC server (register and login functionality)
 - Poems gRPC server (get only current user created poems and categories)
 - Admin gRPC server  (CRUD operations with categories & poems)
-- Frontend server (communicate with OAuth, Poems & Admin gRPC services and render page to website visitor)
+- Frontend server (communicate with OAuth, Poems & Admin gRPC servers and render page to website visitor)
 4. gRPC framework
-- created 4 Go-based gRPC services using [Protocol Buffers](https://developers.google.com/protocol-buffers/docs/gotutorial)
+- created 3 Go-based gRPC servers using [Protocol Buffers](https://developers.google.com/protocol-buffers/docs/gotutorial)
 5. [Bootstrap 5.1.3](https://getbootstrap.com/docs/5.1/getting-started/introduction/) (frontend)
 
 Test coverage:
