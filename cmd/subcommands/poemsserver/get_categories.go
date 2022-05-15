@@ -32,17 +32,18 @@ func (srv *poemsServer) GetCategories(ctx context.Context, req *poems.Categories
 /* get categories list from mysql database */
 func (p *poemsServerCmd) getCategories(db *sql.DB, req *poems.CategoriesRequest) (result map[int32]*poems.Category, err error) {
 	query, err := runtime.QueryDb(db, req, func(db *sql.DB, req *poems.CategoriesRequest) (*sql.Rows, error) {
-		return db.Query("SELECT  poem_categories.category_id, poem_categories.name, poem_categories.slug FROM poem_categories WHERE poem_categories.status = ? AND poem_categories.user_id = ?;", req.Status.String(), req.UserId)
+		return db.Query("SELECT poem_categories.category_id, poem_categories.name, poem_categories.slug FROM poem_categories WHERE poem_categories.status = ? AND poem_categories.user_id = ?;", req.Status.String(), req.UserId)
 	})
 	if err != nil {
 		return nil, err
 	}
 	result = make(map[int32]*poems.Category)
 	for query.Next() {
-		var id *int
-		var category *poems.Category
-		query.Scan(id, category.Name, category.Slug)
-		result[int32(*id)] = category
+		var id int
+		var name string
+		var slug string
+		query.Scan(&id, &name, &slug)
+		result[int32(id)] = &poems.Category{Name: name, Slug: slug}
 	}
 	return result, nil
 }

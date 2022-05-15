@@ -52,13 +52,13 @@ func (p *adminFrontendCmd) SetFlags(f *flag.FlagSet) {
 	f.IntVar(&p.gRPCAdminPort, "admin-grpc-port", grpc_port, "admin gRPC port")
 	grpc_oauth_port, err := strconv.Atoi(os.Getenv("OAUTH_RPC_PORT"))
 	if err != nil {
-		grpc_port = 0
+		grpc_oauth_port = 0
 	}
 	f.StringVar(&p.gRPCOauthHost, "oauth-grpc-host", os.Getenv("OAUTH_RPC_HOST"), "oauth gRPC hostname")
 	f.IntVar(&p.gRPCOauthPort, "oauth-grpc-port", grpc_oauth_port, "oauth gRPC port")
 	grpc_poems_port, err := strconv.Atoi(os.Getenv("POEMS_RPC_PORT"))
 	if err != nil {
-		grpc_port = 0
+		grpc_poems_port = 0
 	}
 	f.StringVar(&p.gRPCPoemsHost, "poems-grpc-host", os.Getenv("POEMS_RPC_HOST"), "poems gRPC hostname")
 	f.IntVar(&p.gRPCPoemsPort, "poems-grpc-port", grpc_poems_port, "poems gRPC port")

@@ -39,10 +39,11 @@ func (p *poemsServerCmd) getPoems(db *sql.DB, req *poems.PoemsRequest) (result m
 	}
 	result = make(map[int32]*poems.Poem)
 	for query.Next() {
-		var id *int
-		var poem *poems.Poem
-		query.Scan(id, poem.Title, poem.Text)
-		result[int32(*id)] = poem
+		var id int
+		var title string
+		var text string
+		query.Scan(id, &title, &text)
+		result[int32(id)] = &poems.Poem{Title: title, Text: text}
 	}
 	return result, nil
 }
