@@ -194,6 +194,7 @@ func (p *adminFrontendCmd) addCategoriesPageHandler() {
 				})
 				return
 			} else {
+				session.Save(r, rw)
 				rw.Header().Set("Cache-Control", "no-store, must-revalidate")
 				rw.Header().Set("Pragma", "no-cache")
 				http.Redirect(rw, r, "/login", http.StatusFound)
