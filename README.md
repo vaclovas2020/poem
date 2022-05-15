@@ -15,9 +15,14 @@ By developing this project, I learned:
 Used technologies in project:
 1. Docker
 2. Docker compose
-3. Go (backend services)
-4. gRPC framework (Protocol Buffers)
-5. Bootstrap 5.1.3 (frontend)
+3. Go (written all backend services):
+- Oauth gRPC server (register and login functionality)
+- Poems gRPC server (get current user created poems and categories)
+- Admin gRPC server  (edit, update, delete categories & poems)
+- Frontend server (communicate with OAuth, Poems & Admin gRPC services and render page to website visitor)
+4. gRPC framework
+- created 4 Go-based gRPC services using [Protocol Buffers](https://developers.google.com/protocol-buffers/docs/gotutorial)
+5. [Bootstrap 5.1.3](https://getbootstrap.com/docs/5.1/getting-started/introduction/) (frontend)
 
 Test coverage:
 
