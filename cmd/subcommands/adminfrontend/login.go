@@ -13,6 +13,9 @@ import (
 )
 
 type loginTemplateParams struct {
+	LoginTitle     string // login page title
+	RegisterTitle  string // register page title
+	HomeTitle      string // home page title
 	PageTitle      string // page title
 	LoginActionUrl string // login form action url
 	CopyrightText  string // footer copyright text
@@ -45,6 +48,9 @@ func (p *adminFrontendCmd) generateNewTokenAndShowLogin(session *sessions.Sessio
 		XsrfToken:      secureXsrf,
 		EmailField:     "Email",
 		PasswordField:  "Password",
+		HomeTitle:      "Home",
+		LoginTitle:     "Login",
+		RegisterTitle:  "Register",
 	}
 	for _, v := range session.Flashes() {
 		obj.Message = v.(string)

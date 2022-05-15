@@ -21,8 +21,8 @@ type homeTemplateParams struct {
 type homeGuestParams struct {
 	LoginTitle    string // login page title
 	RegisterTitle string // register page title
-	PageTitle     string // page title
 	HomeTitle     string // home page title
+	PageTitle     string // page title
 	CopyrightText string // footer copyright text
 }
 

@@ -26,24 +26,15 @@
       <div class="justify-content-between collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/">{{.HomeTitle}}</a>
+            <a class="nav-link" href="/">{{.HomeTitle}}</a>
+          </li>
+          <li class="nav-item mb-3 mb-md-0 ms-md-3 me-md-3">
+            <a class="btn btn-primary active" aria-current="page" href="/login">{{.LoginTitle}}</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/categories">{{.CategoriesTitle}}</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/poems">{{.PoemsTitle}}</a>
+            <a class="btn btn-danger" href="/register">{{.RegisterTitle}}</a>
           </li>
         </ul>
-        <div class="d-flex dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-            data-bs-toggle="dropdown" aria-expanded="false">
-            {{.UserEmail}}
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" href="/logout">{{.LogoutTitle}}</a></li>
-          </ul>
-        </div>
       </div>
     </div>
   </nav>
