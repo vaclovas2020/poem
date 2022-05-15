@@ -62,7 +62,7 @@
     <h2 class="mt-4 mb-4">Poems</h2>
     <ul class="mt-4 mb-4 list-group">
       {{range $index, $element := .Poems}}
-      <li class="list-group-item">{{.Title}} <br />Category: {{.CategoryName}}<br />
+      <li class="list-group-item">{{.Title}} <br />Category: {{.CategoryName}}<br />Text: {{.Text}}<br />
         <button type="button" class="btn btn-dager" data-bs-toggle="modal" data-bs-target="#deleteModal-{{$index}}">
           Delete
         </button>
