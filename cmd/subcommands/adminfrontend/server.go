@@ -32,6 +32,10 @@ func (p *adminFrontendCmd) runServer() {
 	if err != nil {
 		panic(err)
 	}
+	err = p.addRegisterPageHandler()
+	if err != nil {
+		panic(err)
+	}
 	err = p.addHomePageHandler()
 	if err != nil {
 		panic(err)
