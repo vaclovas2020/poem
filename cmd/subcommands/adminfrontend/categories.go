@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
 	"golang.org/x/net/xsrftoken"
@@ -112,6 +113,11 @@ func (p *adminFrontendCmd) addCategoriesPageHandler() {
 						p.renderCategoriesPage(session, rw, r)
 						return
 					}
+					if (token == "" || name == "" || category_id == "") && action == "update" {
+						session.AddFlash("Please enter category name")
+						p.renderCategoriesPage(session, rw, r)
+						return
+					}
 					if (token == "" || category_id == "") && action == "delete" {
 						session.AddFlash("Please enter category Id")
 						p.renderCategoriesPage(session, rw, r)
@@ -136,7 +142,7 @@ func (p *adminFrontendCmd) addCategoriesPageHandler() {
 					if valid {
 						switch action {
 						case "create":
-							response, err := p.grpcAddCategory(&admin.AdminCategory{Name: name, Slug: runtime.GenerateSlug(name), Status: admin.AdminCategory_PUBLISHED, UserId: session.Values["userId"].(int64)})
+							response, err := p.grpcAddCategory(&admin.AdminCategory{Name: name, Slug: fmt.Sprintf("%s-%s", name, uuid.NewString()), Status: admin.AdminCategory_PUBLISHED, UserId: session.Values["userId"].(int64)})
 							if err != nil {
 								errorMsg(rw, err, http.StatusInternalServerError)
 								return
@@ -159,6 +165,22 @@ func (p *adminFrontendCmd) addCategoriesPageHandler() {
 							}
 							if !response.Success {
 								session.AddFlash("Cannot delete category")
+							}
+							p.renderCategoriesPage(session, rw, r)
+							break
+						case "update":
+							categoryId, err := strconv.ParseInt(category_id, 10, 32)
+							if err != nil {
+								errorMsg(rw, err, http.StatusInternalServerError)
+								return
+							}
+							response, err := p.grpcEditCategory(&admin.AdminCategoryEdit{Name: name, Slug: runtime.GenerateSlug(fmt.Sprintf("%s-%s", name, uuid.NewString())), CategoryId: int32(categoryId), UserId: session.Values["userId"].(int64)})
+							if err != nil {
+								errorMsg(rw, err, http.StatusInternalServerError)
+								return
+							}
+							if !response.Success {
+								session.AddFlash("Cannot update category")
 							}
 							p.renderCategoriesPage(session, rw, r)
 							break

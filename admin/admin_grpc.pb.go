@@ -26,6 +26,8 @@ type AdminClient interface {
 	AddPoem(ctx context.Context, in *AdminPoem, opts ...grpc.CallOption) (*PoemResponse, error)
 	// Add new category
 	AddCategory(ctx context.Context, in *AdminCategory, opts ...grpc.CallOption) (*CategoryResponse, error)
+	// Edit category
+	EditCategory(ctx context.Context, in *AdminCategoryEdit, opts ...grpc.CallOption) (*CategoryEditResponse, error)
 	// Delete category
 	DeleteCategory(ctx context.Context, in *DeleteCategoryRequest, opts ...grpc.CallOption) (*DeleteCategoryResponse, error)
 }
@@ -56,6 +58,15 @@ func (c *adminClient) AddCategory(ctx context.Context, in *AdminCategory, opts .
 	return out, nil
 }
 
+func (c *adminClient) EditCategory(ctx context.Context, in *AdminCategoryEdit, opts ...grpc.CallOption) (*CategoryEditResponse, error) {
+	out := new(CategoryEditResponse)
+	err := c.cc.Invoke(ctx, "/Admin/EditCategory", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *adminClient) DeleteCategory(ctx context.Context, in *DeleteCategoryRequest, opts ...grpc.CallOption) (*DeleteCategoryResponse, error) {
 	out := new(DeleteCategoryResponse)
 	err := c.cc.Invoke(ctx, "/Admin/DeleteCategory", in, out, opts...)
@@ -73,6 +84,8 @@ type AdminServer interface {
 	AddPoem(context.Context, *AdminPoem) (*PoemResponse, error)
 	// Add new category
 	AddCategory(context.Context, *AdminCategory) (*CategoryResponse, error)
+	// Edit category
+	EditCategory(context.Context, *AdminCategoryEdit) (*CategoryEditResponse, error)
 	// Delete category
 	DeleteCategory(context.Context, *DeleteCategoryRequest) (*DeleteCategoryResponse, error)
 	mustEmbedUnimplementedAdminServer()
@@ -87,6 +100,9 @@ func (UnimplementedAdminServer) AddPoem(context.Context, *AdminPoem) (*PoemRespo
 }
 func (UnimplementedAdminServer) AddCategory(context.Context, *AdminCategory) (*CategoryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddCategory not implemented")
+}
+func (UnimplementedAdminServer) EditCategory(context.Context, *AdminCategoryEdit) (*CategoryEditResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EditCategory not implemented")
 }
 func (UnimplementedAdminServer) DeleteCategory(context.Context, *DeleteCategoryRequest) (*DeleteCategoryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCategory not implemented")
@@ -140,6 +156,24 @@ func _Admin_AddCategory_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Admin_EditCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminCategoryEdit)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).EditCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/Admin/EditCategory",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).EditCategory(ctx, req.(*AdminCategoryEdit))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Admin_DeleteCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteCategoryRequest)
 	if err := dec(in); err != nil {
@@ -172,6 +206,10 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddCategory",
 			Handler:    _Admin_AddCategory_Handler,
+		},
+		{
+			MethodName: "EditCategory",
+			Handler:    _Admin_EditCategory_Handler,
 		},
 		{
 			MethodName: "DeleteCategory",

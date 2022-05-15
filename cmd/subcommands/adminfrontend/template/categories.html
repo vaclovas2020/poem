@@ -58,17 +58,12 @@
     {{end}}
     {{if .Categories}}
     <h2 class="mt-4 mb-4">Categories</h2>
-    <div class="alert alert-warning" role="alert">
-      Notice: you cannot update categories right now.
-    </div>
     <ul class="mt-4 mb-4 list-group">
       {{range $index, $element := .Categories}}
       <li class="list-group-item">{{$element.Name}}
-        <!-- Button trigger modal -->
         <button type="button" class="btn btn-dager" data-bs-toggle="modal" data-bs-target="#deleteModal-{{$index}}">
           Delete
         </button>
-        <!-- Modal -->
         <div class="modal fade" id="deleteModal-{{$index}}" tabindex="-1" role="dialog"
           aria-labelledby="deleteModal-{{$index}}Label" aria-hidden="true">
           <div class="modal-dialog" role="document">
@@ -94,6 +89,37 @@
             </div>
           </div>
         </div>
+        <button type="button" class="btn btn-dager" data-bs-toggle="modal" data-bs-target="#editModal-{{$index}}">
+          Edit
+        </button>
+        <div class="modal fade" id="editModal-{{$index}}" tabindex="-1" role="dialog"
+          aria-labelledby="editModal-{{$index}}Label" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <form method="POST" action="{{$actionUrl}}">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="editModal-{{$index}}Label">Edit category</h5>
+                  <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class="form-group">
+                    <label for="name">Category name</label>
+                    <input type="text" class="form-control" name="name" id="name" value="{{$element.Name}}" autocomplete="off" placeholder="Enter category name">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <input type="hidden" name="xsrf_token" value="{{$xsrf}}" />
+                  <input type="hidden" name="category_id" value="{{$index}}" />
+                  <input type="hidden" name="action" value="update" />
+                  <button type="submit" class="btn btn-primary">Update category</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       </li>
       {{end}}
     </ul>
@@ -106,7 +132,7 @@
       <h2>Create new category</h2>
       <div class="form-group">
         <label for="name">Category name</label>
-        <input type="text" class="form-control" name="name" id="name" autocomplete="off" placeholder="Enter email">
+        <input type="text" class="form-control" name="name" id="name" autocomplete="off" placeholder="Enter category name">
       </div>
       <input type="hidden" name="xsrf_token" value="{{$xsrf}}" />
       <input type="hidden" name="action" value="create" />
