@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="index, follow" />
+  <meta name="description" content="Cloud-based CMS for poets and writers." />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -40,7 +41,20 @@
     </div>
   </nav>
   <div class="container">
-    
+    <div
+      style="margin-bottom: 2em;align-items: center;justify-content: space-evenly;display:flex; flex-wrap: wrap;gap: 10px;">
+      <img style="width: 100%; max-width: 512px;" src="/assets/img/poem_logo.png" class="d-block w-100" alt="poem.dev logo">
+      <div style="text-align: center;font-size: 2em;line-height: 1.5em;">
+        Cloud-based CMS <br />for poets and writers
+        <div
+          style="margin-top: 2em;width: 100%;display: flex;flex-wrap: wrap;align-items: center;justify-content: center;gap: 20px;">
+          <a href="/login" class="btn btn-success"
+            role="button">{{.LoginTitle}}</a>
+          <a style="margin: 1em 0;" href="/register" class="btn btn-danger"
+            role="button">{{.RegisterTitle}}</a>
+        </div>
+      </div>
+    </div>
   </div>
   <footer class="footer">
     <div class="container-fluid">
