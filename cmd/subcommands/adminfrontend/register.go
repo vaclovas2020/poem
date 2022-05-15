@@ -13,17 +13,17 @@ import (
 )
 
 type registerTemplateParams struct {
-	LoginTitle      string // login page title
-	RegisterTitle   string // register page title
-	HomeTitle       string // home page title
-	PageTitle       string // page title
-	LoginActionUrl  string // login form action url
-	CopyrightText   string // footer copyright text
-	XsrfToken       string // secure xsrf_token
-	Message         string // form error message (optional)
-	EmailField      string // user email input label
-	PasswordField   string // user password input label
-	RePasswordField string // user password input label
+	LoginTitle        string // login page title
+	RegisterTitle     string // register page title
+	HomeTitle         string // home page title
+	PageTitle         string // page title
+	RegisterActionUrl string // register form action url
+	CopyrightText     string // footer copyright text
+	XsrfToken         string // secure xsrf_token
+	Message           string // form error message (optional)
+	EmailField        string // user email input label
+	PasswordField     string // user password input label
+	RePasswordField   string // user password input label
 }
 
 func (p *adminFrontendCmd) generateNewTokenAndShowRegister(session *sessions.Session, rw http.ResponseWriter, r *http.Request) {
@@ -39,16 +39,16 @@ func (p *adminFrontendCmd) generateNewTokenAndShowRegister(session *sessions.Ses
 		return
 	}
 	obj := &registerTemplateParams{
-		PageTitle:       "Login | Poem CMS",
-		LoginActionUrl:  "/login",
-		CopyrightText:   "Copyright © 2022 Vaclovas Lapinskis",
-		XsrfToken:       secureXsrf,
-		EmailField:      "Email",
-		PasswordField:   "Password",
-		RePasswordField: "Re-enter password",
-		HomeTitle:       "Home",
-		LoginTitle:      "Login",
-		RegisterTitle:   "Register",
+		PageTitle:         "Register | Poem CMS",
+		RegisterActionUrl: "/register",
+		CopyrightText:     "Copyright © 2022 Vaclovas Lapinskis",
+		XsrfToken:         secureXsrf,
+		EmailField:        "Email",
+		PasswordField:     "Password",
+		RePasswordField:   "Re-enter password",
+		HomeTitle:         "Home",
+		LoginTitle:        "Login",
+		RegisterTitle:     "Register",
 	}
 	for _, v := range session.Flashes() {
 		obj.Message = v.(string)
@@ -85,7 +85,7 @@ func (p *adminFrontendCmd) addRegisterPageHandler() error {
 				return
 			}
 			webimizer.Get(rw, r, func(rw http.ResponseWriter, r *http.Request) {
-				p.generateNewTokenAndShowLogin(session, rw, r)
+				p.generateNewTokenAndShowRegister(session, rw, r)
 			})
 			webimizer.Post(rw, r, func(rw http.ResponseWriter, r *http.Request) {
 				err = r.ParseForm()
@@ -99,12 +99,12 @@ func (p *adminFrontendCmd) addRegisterPageHandler() error {
 				repassword := r.FormValue("re-password")
 				if token == "" || email == "" || password == "" || repassword == "" {
 					session.AddFlash("Please enter valid email and password")
-					p.generateNewTokenAndShowLogin(session, rw, r)
+					p.generateNewTokenAndShowRegister(session, rw, r)
 					return
 				}
 				if password != repassword {
 					session.AddFlash("Password mismatch")
-					p.generateNewTokenAndShowLogin(session, rw, r)
+					p.generateNewTokenAndShowRegister(session, rw, r)
 					return
 				}
 				var realToken string
@@ -127,7 +127,7 @@ func (p *adminFrontendCmd) addRegisterPageHandler() error {
 					response, err := p.grpcNewUser(&oauth.AuthRequest{Email: email, Password: password, Role: oauth.UserRole_admin})
 					if err != nil {
 						session.AddFlash(err.Error())
-						p.generateNewTokenAndShowLogin(session, rw, r)
+						p.generateNewTokenAndShowRegister(session, rw, r)
 						return
 					}
 					if response.Success {
@@ -147,7 +147,7 @@ func (p *adminFrontendCmd) addRegisterPageHandler() error {
 						return
 					} else {
 						session.AddFlash("User with this email already exists")
-						p.generateNewTokenAndShowLogin(session, rw, r)
+						p.generateNewTokenAndShowRegister(session, rw, r)
 						return
 					}
 				} else {
