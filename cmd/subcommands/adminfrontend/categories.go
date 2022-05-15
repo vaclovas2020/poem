@@ -109,17 +109,17 @@ func (p *adminFrontendCmd) addCategoriesPageHandler() {
 					name := r.FormValue("name")
 					category_id := r.FormValue("category_id")
 					if (token == "" || name == "") && action == "create" {
-						session.AddFlash("Please enter category name")
+						session.AddFlash("Please enter all form fields")
 						p.renderCategoriesPage(session, rw, r)
 						return
 					}
 					if (token == "" || name == "" || category_id == "") && action == "update" {
-						session.AddFlash("Please enter category name")
+						session.AddFlash("Please enter all form fields")
 						p.renderCategoriesPage(session, rw, r)
 						return
 					}
 					if (token == "" || category_id == "") && action == "delete" {
-						session.AddFlash("Please enter category Id")
+						session.AddFlash("Please enter all form fields")
 						p.renderCategoriesPage(session, rw, r)
 						return
 					}
