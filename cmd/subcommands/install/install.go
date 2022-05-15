@@ -53,18 +53,13 @@ func (p *installCmd) createUserDb(db *sql.DB) error {
 	if err != nil {
 		return err
 	}
-	role := "admin"
-	_, err = db.Exec("REPLACE INTO `poem_users` (user_email, password_hash, user_role) VALUES (?,?,?);", p.cmsUser, p.cmsPasswordHash, role)
-	if err != nil {
-		return err
-	}
 	fmt.Println("CMS user database installed!")
 	return nil
 }
 
 /* Create categories database schema */
 func (p *installCmd) createCategoriesDb(db *sql.DB) error {
-	_, err := db.Exec("CREATE TABLE IF NOT EXISTS `poem_categories` (category_id INT NOT NULL AUTO_INCREMENT, name VARCHAR(100) NOT NULL, slug VARCHAR(100) NOT NULL, status VARCHAR(10) NOT NULL, PRIMARY KEY (category_id), UNIQUE KEY (slug) );")
+	_, err := db.Exec("CREATE TABLE IF NOT EXISTS `poem_categories` (category_id INT NOT NULL AUTO_INCREMENT, user_id INT NOT NULL, name VARCHAR(100) NOT NULL, slug VARCHAR(100) NOT NULL, status VARCHAR(10) NOT NULL, PRIMARY KEY (category_id), UNIQUE KEY (slug) );")
 	if err != nil {
 		return err
 	}
@@ -74,7 +69,7 @@ func (p *installCmd) createCategoriesDb(db *sql.DB) error {
 
 /* Create poems database schema */
 func (p *installCmd) createPoemsDb(db *sql.DB) error {
-	_, err := db.Exec("CREATE TABLE IF NOT EXISTS `poem_poems` (poem_id INT NOT NULL AUTO_INCREMENT, category_id INT NOT NULL, title VARCHAR(100) NOT NULL, text TEXT NOT NULL, PRIMARY KEY (poem_id) );")
+	_, err := db.Exec("CREATE TABLE IF NOT EXISTS `poem_poems` (poem_id INT NOT NULL AUTO_INCREMENT, category_id INT NOT NULL, user_id INT NOT NULL, title VARCHAR(100) NOT NULL, text TEXT NOT NULL, PRIMARY KEY (poem_id) );")
 	if err != nil {
 		return err
 	}

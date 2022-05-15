@@ -29,4 +29,5 @@ enum UserRole {
 message User {
   string email = 1;
   UserRole role = 2;
+  int32 userId = 3;
 }

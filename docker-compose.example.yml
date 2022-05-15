@@ -11,8 +11,6 @@ services:
       MYSQL_DATABASE: exampledb
       MYSQL_USER: exampleuser
       MYSQL_PASSWORD: examplepass
-      CMS_USER: demo@poem.dev
-      CMS_PASSWORD: password123
     command: poems-server
   admin_rpc:
     image: poem:latest

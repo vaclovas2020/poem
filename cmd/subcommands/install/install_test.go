@@ -20,32 +20,22 @@ func newMock() (*sql.DB, sqlmock.Sqlmock) {
 	return db, mock
 }
 
-var p = installCmd{cmsUser: "User", cmsPassword: "Password"}
+var p = installCmd{}
 
 func TestCreateUserDb(t *testing.T) {
 	db, mock := newMock()
 	sql := "CREATE TABLE IF NOT EXISTS `poem_users` \\(user_id INT NOT NULL AUTO_INCREMENT, user_email VARCHAR\\(255\\) NOT NULL, password_hash VARCHAR\\(255\\) NOT NULL, user_role VARCHAR\\(20\\) NOT NULL, PRIMARY KEY \\(user_id\\), UNIQUE KEY \\(user_email\\) \\);"
 	mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(0, 0))
-	sql2 := "REPLACE INTO `poem_users` \\(user_email, password_hash, user_role\\) VALUES \\(\\?,\\?,\\?\\);"
-	password, err := hashPassword(p.cmsPassword)
-	p.cmsPasswordHash = password
-	assert.NoError(t, err)
-	mock.ExpectExec(sql2).WithArgs(p.cmsUser, password, "admin").WillReturnResult(sqlmock.NewResult(0, 1))
-	err = p.createUserDb(db)
+	err := p.createUserDb(db)
 	assert.NoError(t, err)
 	mock.ExpectExec(sql).WillReturnError(fmt.Errorf("Testing error handler"))
-	err = p.createUserDb(db)
-	assert.Error(t, err)
-	db, mock = newMock()
-	mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(0, 0))
-	mock.ExpectExec(sql2).WithArgs(p.cmsUser, password, "admin").WillReturnError(fmt.Errorf("Testing error handler"))
 	err = p.createUserDb(db)
 	assert.Error(t, err)
 }
 
 func TestCreateCategoriesDb(t *testing.T) {
 	db, mock := newMock()
-	sql := "CREATE TABLE IF NOT EXISTS `poem_categories` \\(category_id INT NOT NULL AUTO_INCREMENT, name VARCHAR\\(100\\) NOT NULL, slug VARCHAR\\(100\\) NOT NULL, status VARCHAR\\(10\\) NOT NULL, PRIMARY KEY \\(category_id\\), UNIQUE KEY \\(slug\\) \\);"
+	sql := "CREATE TABLE IF NOT EXISTS `poem_categories` \\(category_id INT NOT NULL AUTO_INCREMENT, user_id INT NOT NULL, name VARCHAR\\(100\\) NOT NULL, slug VARCHAR\\(100\\) NOT NULL, status VARCHAR\\(10\\) NOT NULL, PRIMARY KEY \\(category_id\\), UNIQUE KEY \\(slug\\) \\);"
 	mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(0, 0))
 	err := p.createCategoriesDb(db)
 	assert.NoError(t, err)
@@ -56,7 +46,7 @@ func TestCreateCategoriesDb(t *testing.T) {
 
 func TestCreatePoemDb(t *testing.T) {
 	db, mock := newMock()
-	sql := "CREATE TABLE IF NOT EXISTS `poem_poems` \\(poem_id INT NOT NULL AUTO_INCREMENT, category_id INT NOT NULL, title VARCHAR\\(100\\) NOT NULL, text TEXT NOT NULL, PRIMARY KEY \\(poem_id\\) \\);"
+	sql := "CREATE TABLE IF NOT EXISTS `poem_poems` \\(poem_id INT NOT NULL AUTO_INCREMENT, category_id INT NOT NULL, user_id INT NOT NULL, title VARCHAR\\(100\\) NOT NULL, text TEXT NOT NULL, PRIMARY KEY \\(poem_id\\) \\);"
 	mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(0, 0))
 	err := p.createPoemsDb(db)
 	assert.NoError(t, err)
@@ -86,16 +76,11 @@ func TestInstallDatabase(t *testing.T) {
 	db, mock := newMock()
 	sql := "CREATE TABLE IF NOT EXISTS `poem_users` \\(user_id INT NOT NULL AUTO_INCREMENT, user_email VARCHAR\\(255\\) NOT NULL, password_hash VARCHAR\\(255\\) NOT NULL, user_role VARCHAR\\(20\\) NOT NULL, PRIMARY KEY \\(user_id\\), UNIQUE KEY \\(user_email\\) \\);"
 	mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(0, 0))
-	sql2 := "REPLACE INTO `poem_users` \\(user_email, password_hash, user_role\\) VALUES \\(\\?,\\?,\\?\\);"
-	password, err := hashPassword(p.cmsPassword)
-	p.cmsPasswordHash = password
-	assert.NoError(t, err)
-	mock.ExpectExec(sql2).WithArgs(p.cmsUser, password, "admin").WillReturnResult(sqlmock.NewResult(0, 1))
-	sql3 := "CREATE TABLE IF NOT EXISTS `poem_categories` \\(category_id INT NOT NULL AUTO_INCREMENT, name VARCHAR\\(100\\) NOT NULL, slug VARCHAR\\(100\\) NOT NULL, status VARCHAR\\(10\\) NOT NULL, PRIMARY KEY \\(category_id\\), UNIQUE KEY \\(slug\\) \\);"
+	sql3 := "CREATE TABLE IF NOT EXISTS `poem_categories` \\(category_id INT NOT NULL AUTO_INCREMENT, user_id INT NOT NULL, name VARCHAR\\(100\\) NOT NULL, slug VARCHAR\\(100\\) NOT NULL, status VARCHAR\\(10\\) NOT NULL, PRIMARY KEY \\(category_id\\), UNIQUE KEY \\(slug\\) \\);"
 	mock.ExpectExec(sql3).WillReturnResult(sqlmock.NewResult(0, 0))
-	sql4 := "CREATE TABLE IF NOT EXISTS `poem_poems` \\(poem_id INT NOT NULL AUTO_INCREMENT, category_id INT NOT NULL, title VARCHAR\\(100\\) NOT NULL, text TEXT NOT NULL, PRIMARY KEY \\(poem_id\\) \\);"
+	sql4 := "CREATE TABLE IF NOT EXISTS `poem_poems` \\(poem_id INT NOT NULL AUTO_INCREMENT, category_id INT NOT NULL, user_id INT NOT NULL, title VARCHAR\\(100\\) NOT NULL, text TEXT NOT NULL, PRIMARY KEY \\(poem_id\\) \\);"
 	mock.ExpectExec(sql4).WillReturnResult(sqlmock.NewResult(0, 0))
-	err = p.installDatabase(db)
+	err := p.installDatabase(db)
 	assert.NoError(t, err)
 	mock.ExpectExec(sql).WillReturnError(fmt.Errorf("Testing error handler"))
 	err = p.installDatabase(db)
