@@ -44,6 +44,6 @@ func (srv *oAuthServer) NewUser(_ context.Context, request *oauth.AuthRequest) (
 		return response, err
 	}
 	response.Success = true
-	response.User = &oauth.User{UserId: userId, Email: email, Role: request.Role}
+	response.User = &oauth.User{UserId: userId, Email: request.Email, Role: request.Role}
 	return response, nil
 }
