@@ -19,7 +19,7 @@ func (srv *poemsServer) GetCategories(ctx context.Context, req *poems.Categories
 		return nil, err
 	}
 	defer db.Close()
-	categoriesMap, err := srv.cmd.getCategories(db, req.Status.String())
+	categoriesMap, err := srv.cmd.getCategories(db, req)
 	if err != nil {
 		return nil, err
 	}
@@ -30,9 +30,9 @@ func (srv *poemsServer) GetCategories(ctx context.Context, req *poems.Categories
 }
 
 /* get categories list from mysql database */
-func (p *poemsServerCmd) getCategories(db *sql.DB, status string) (result map[int32]*poems.Category, err error) {
-	query, err := runtime.QueryDb(db, status, func(db *sql.DB, status string) (*sql.Rows, error) {
-		return db.Query("SELECT  poem_categories.category_id, poem_categories.name, poem_categories.slug FROM poem_categories WHERE poem_categories.status = ?;", status)
+func (p *poemsServerCmd) getCategories(db *sql.DB, req *poems.CategoriesRequest) (result map[int32]*poems.Category, err error) {
+	query, err := runtime.QueryDb(db, req, func(db *sql.DB, req *poems.CategoriesRequest) (*sql.Rows, error) {
+		return db.Query("SELECT  poem_categories.category_id, poem_categories.name, poem_categories.slug FROM poem_categories WHERE poem_categories.status = ? AND poem_categories.user_id = ?;", req.Status.String(), req.UserId)
 	})
 	if err != nil {
 		return nil, err

@@ -16,6 +16,7 @@ message CategoriesRequest {
     DRAFT = 1;
   }
   Status status = 1;
+  int64 userId = 2;
 }
 
 // The response message containing poems content.
@@ -27,6 +28,7 @@ message CategoriesResponse  {
 // The request message containing the category.
 message PoemsRequest {
   string category = 1;
+  int64 userId = 2;
 }
 
 // The response message containing poems content.
@@ -38,11 +40,9 @@ message PoemsResponse  {
 message Poem {
   string title = 1;
   string text = 2;
-  int64 userId = 3;
 }
 
 message Category {
   string name = 1;
   string slug = 2;
-  int64 userId = 3;
 }

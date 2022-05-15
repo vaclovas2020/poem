@@ -20,7 +20,7 @@ func (srv *adminServer) AddPoem(_ context.Context, poem *admin.AdminPoem) (respo
 	}
 	defer db.Close()
 	_, err = runtime.ExecDb(db, poem, func(db *sql.DB, poem *admin.AdminPoem) (sql.Result, error) {
-		return db.Exec("INSERT INTO `poem_poems`(category_id,title,text) VALUES (?,?,?);", poem.CategoryId, poem.Title, poem.Text)
+		return db.Exec("INSERT INTO `poem_poems`(category_id,title,text,user_id) VALUES (?,?,?,?);", poem.CategoryId, poem.Title, poem.Text, poem.UserId)
 	})
 	if err != nil {
 		return nil, err

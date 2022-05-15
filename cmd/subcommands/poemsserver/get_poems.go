@@ -19,7 +19,7 @@ func (srv *poemsServer) GetPoems(ctx context.Context, req *poems.PoemsRequest) (
 		return nil, err
 	}
 	defer db.Close()
-	poemsMap, err := srv.cmd.getPoems(db, req.Category)
+	poemsMap, err := srv.cmd.getPoems(db, req)
 	if err != nil {
 		return nil, err
 	}
@@ -30,9 +30,9 @@ func (srv *poemsServer) GetPoems(ctx context.Context, req *poems.PoemsRequest) (
 }
 
 /* get poems list from mysql database */
-func (p *poemsServerCmd) getPoems(db *sql.DB, category string) (result map[int32]*poems.Poem, err error) {
-	query, err := runtime.QueryDb(db, category, func(db *sql.DB, category string) (*sql.Rows, error) {
-		return db.Query("SELECT poem_poems.poem_id, poem_poems.title, poem_poems.text FROM poem_poems INNER JOIN poem_categories ON poem_poems.category_id = poem_categories.category_id WHERE poem_categories.slug = ?;", category)
+func (p *poemsServerCmd) getPoems(db *sql.DB, req *poems.PoemsRequest) (result map[int32]*poems.Poem, err error) {
+	query, err := runtime.QueryDb(db, req, func(db *sql.DB, req *poems.PoemsRequest) (*sql.Rows, error) {
+		return db.Query("SELECT poem_poems.poem_id, poem_poems.title, poem_poems.text FROM poem_poems INNER JOIN poem_categories ON poem_poems.category_id = poem_categories.category_id WHERE poem_categories.slug = ? AND poem_poems.user_id = ?;", req.Category, req.UserId)
 	})
 	if err != nil {
 		return nil, err
