@@ -19,8 +19,8 @@ Used technologies in project:
 2. Docker compose
 3. Go (written all backend services):
 - Oauth gRPC server (register and login functionality)
-- Poems gRPC server (get current user created poems and categories)
-- Admin gRPC server  (edit, update, delete categories & poems)
+- Poems gRPC server (get only current user created poems and categories)
+- Admin gRPC server  (CRUD operations with categories & poems)
 - Frontend server (communicate with OAuth, Poems & Admin gRPC services and render page to website visitor)
 4. gRPC framework
 - created 4 Go-based gRPC services using [Protocol Buffers](https://developers.google.com/protocol-buffers/docs/gotutorial)
