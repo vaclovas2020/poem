@@ -23,6 +23,7 @@ type loginTemplateParams struct {
 	Message        string // form error message (optional)
 	EmailField     string // user email input label
 	PasswordField  string // user password input label
+	SubmitButton   string // submit button text
 }
 
 func httpNotAllowFunc(rw http.ResponseWriter, r *http.Request) {
@@ -51,6 +52,7 @@ func (p *adminFrontendCmd) generateNewTokenAndShowLogin(session *sessions.Sessio
 		HomeTitle:      "Home",
 		LoginTitle:     "Login",
 		RegisterTitle:  "Register",
+		SubmitButton:   "Login",
 	}
 	for _, v := range session.Flashes() {
 		obj.Message = v.(string)

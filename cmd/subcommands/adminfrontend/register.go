@@ -24,6 +24,7 @@ type registerTemplateParams struct {
 	EmailField        string // user email input label
 	PasswordField     string // user password input label
 	RePasswordField   string // user password input label
+	SubmitButton      string // submit button text
 }
 
 func (p *adminFrontendCmd) generateNewTokenAndShowRegister(session *sessions.Session, rw http.ResponseWriter, r *http.Request) {
@@ -49,6 +50,7 @@ func (p *adminFrontendCmd) generateNewTokenAndShowRegister(session *sessions.Ses
 		HomeTitle:         "Home",
 		LoginTitle:        "Login",
 		RegisterTitle:     "Register",
+		SubmitButton:      "Register",
 	}
 	for _, v := range session.Flashes() {
 		obj.Message = v.(string)

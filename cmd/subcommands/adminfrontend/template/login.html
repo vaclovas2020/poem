@@ -52,7 +52,7 @@
           placeholder="Password">
       </div>
       <input type="hidden" name="xsrf_token" value="{{.XsrfToken}}" />
-      <button style="margin: 1em 0;" type="submit" class="btn btn-primary">Login</button>
+      <button style="margin: 1em 0;" type="submit" class="btn btn-primary">{{.SubmitButton}}</button>
     </form>
     {{if .Message}}
     <div class="alert alert-danger" role="alert">
