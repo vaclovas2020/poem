@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PoemsClient interface {
-	// Get poems list from one category
+	// Get poems list
 	GetPoems(ctx context.Context, in *PoemsRequest, opts ...grpc.CallOption) (*PoemsResponse, error)
 	// Get categories list
 	GetCategories(ctx context.Context, in *CategoriesRequest, opts ...grpc.CallOption) (*CategoriesResponse, error)
@@ -58,7 +58,7 @@ func (c *poemsClient) GetCategories(ctx context.Context, in *CategoriesRequest, 
 // All implementations must embed UnimplementedPoemsServer
 // for forward compatibility
 type PoemsServer interface {
-	// Get poems list from one category
+	// Get poems list
 	GetPoems(context.Context, *PoemsRequest) (*PoemsResponse, error)
 	// Get categories list
 	GetCategories(context.Context, *CategoriesRequest) (*CategoriesResponse, error)

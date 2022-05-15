@@ -32,7 +32,7 @@ func (srv *poemsServer) GetPoems(ctx context.Context, req *poems.PoemsRequest) (
 /* get poems list from mysql database */
 func (p *poemsServerCmd) getPoems(db *sql.DB, req *poems.PoemsRequest) (result map[int32]*poems.Poem, err error) {
 	query, err := runtime.QueryDb(db, req, func(db *sql.DB, req *poems.PoemsRequest) (*sql.Rows, error) {
-		return db.Query("SELECT poem_poems.poem_id, poem_poems.title, poem_poems.text FROM poem_poems INNER JOIN poem_categories ON poem_poems.category_id = poem_categories.category_id WHERE poem_categories.slug = ? AND poem_poems.user_id = ?;", req.Category, req.UserId)
+		return db.Query("SELECT poem_poems.poem_id, poem_poems.category_id, poem_categories.name, poem_poems.title, poem_poems.text FROM poem_poems INNER JOIN poem_categories ON poem_poems.category_id = poem_categories.category_id WHERE poem_poems.user_id = ?;", req.UserId)
 	})
 	if err != nil {
 		return nil, err
@@ -42,8 +42,10 @@ func (p *poemsServerCmd) getPoems(db *sql.DB, req *poems.PoemsRequest) (result m
 		var id int
 		var title string
 		var text string
-		query.Scan(id, &title, &text)
-		result[int32(id)] = &poems.Poem{Title: title, Text: text}
+		var categoryId int
+		var categoryName string
+		query.Scan(&id, &categoryId, &categoryName, &title, &text)
+		result[int32(id)] = &poems.Poem{Title: title, Text: text, CategoryId: int32(categoryId), CategoryName: categoryName}
 	}
 	return result, nil
 }

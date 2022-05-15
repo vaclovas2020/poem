@@ -1,5 +1,7 @@
 <!doctype html>
 <html lang="en">
+{{$xsrf := .XsrfToken}}
+{{$actionUrl := .ActionUrl}}
 
 <head>
   <meta charset="utf-8">
@@ -48,10 +50,39 @@
       </div>
     </div>
   </nav>
-  <div class="container">
+  <div class="container mt-4 mb-4">
     {{if .Message}}
     <div class="alert alert-danger" role="alert">
       {{.Message}}
+    </div>
+    {{end}}
+    {{if .Categories}}
+    <form class="mt-4 mb-4" method="POST" action="{{$actionUrl}}">
+      <h2>Create new poem</h2>
+      <div class="form-group">
+        <label for="category_id">Select category:</label>
+        <select class="form-select" name="category_id" aria-label="Select category">
+          {{range $index, $element := .Categories}}
+          <option value="{{$index}}">{{.Name}}</option>
+          {{end}}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="name">Poem title:</label>
+        <input type="text" class="form-control" name="title" autocomplete="off" placeholder="Enter poem title">
+      </div>
+      <div class="form-group">
+        <label for="name">Poem text:</label>
+        <textarea class="form-control" rows="5" name="text" autocomplete="off" placeholder="Enter poem text"></textarea>
+      </div>
+      <input type="hidden" name="xsrf_token" value="{{$xsrf}}" />
+      <input type="hidden" name="action" value="create" />
+      <button style="margin: 1em 0;" type="submit" class="btn btn-primary">{{.SubmitButton}}</button>
+    </form>
+    {{else}}
+    <div class="alert alert-danger" role="alert">
+      You need to create atleast one category if want to create poem. <a class="btn btn-primary" role="button"
+        href="/categories">Create category now</a>
     </div>
     {{end}}
   </div>
