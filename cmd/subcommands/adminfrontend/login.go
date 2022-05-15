@@ -72,7 +72,7 @@ func (p *adminFrontendCmd) generateNewTokenAndShowLogin(session *sessions.Sessio
 	fmt.Fprint(rw, output)
 }
 
-func (p *adminFrontendCmd) addLoginPageHandler() error {
+func (p *adminFrontendCmd) addLoginPageHandler() {
 	http.Handle("/login", webimizer.HttpHandlerStruct{
 		Handler: webimizer.HttpHandler(func(rw http.ResponseWriter, r *http.Request) {
 			var (
@@ -157,5 +157,4 @@ func (p *adminFrontendCmd) addLoginPageHandler() error {
 		NotAllowHandler: webimizer.HttpNotAllowHandler(httpNotAllowFunc), // webimizer.HtttpNotAllowHandler call if method is not allowed
 		AllowedMethods:  []string{"GET", "POST"},                         // define allowed methods
 	}.Build())
-	return nil
 }

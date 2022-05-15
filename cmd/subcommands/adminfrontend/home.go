@@ -26,7 +26,7 @@ type homeGuestParams struct {
 	CopyrightText string // footer copyright text
 }
 
-func (p *adminFrontendCmd) addHomePageHandler() error {
+func (p *adminFrontendCmd) addHomePageHandler() {
 	http.Handle("/", webimizer.HttpHandlerStruct{
 		Handler: webimizer.HttpHandler(func(rw http.ResponseWriter, r *http.Request) {
 			session, err := store.Get(r, "sid")
@@ -76,5 +76,4 @@ func (p *adminFrontendCmd) addHomePageHandler() error {
 		NotAllowHandler: webimizer.HttpNotAllowHandler(httpNotAllowFunc), // webimizer.HtttpNotAllowHandler call if method is not allowed
 		AllowedMethods:  []string{"GET"},                                 // define allowed methods
 	}.Build())
-	return nil
 }

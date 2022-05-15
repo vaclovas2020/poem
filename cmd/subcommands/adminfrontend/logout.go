@@ -6,7 +6,7 @@ import (
 	"webimizer.dev/webimizer"
 )
 
-func (p *adminFrontendCmd) addLogoutHandler() error {
+func (p *adminFrontendCmd) addLogoutHandler() {
 	http.Handle("/logout", webimizer.HttpHandlerStruct{
 		Handler: webimizer.HttpHandler(func(rw http.ResponseWriter, r *http.Request) {
 			session, err := store.Get(r, "sid")
@@ -31,5 +31,4 @@ func (p *adminFrontendCmd) addLogoutHandler() error {
 		NotAllowHandler: webimizer.HttpNotAllowHandler(httpNotAllowFunc), // webimizer.HtttpNotAllowHandler call if method is not allowed
 		AllowedMethods:  []string{"GET"},                                 // define allowed methods
 	}.Build())
-	return nil
 }

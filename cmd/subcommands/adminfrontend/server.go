@@ -28,21 +28,11 @@ func (p *adminFrontendCmd) runServer() {
 		webimizer.HttpHandler(func(rw http.ResponseWriter, r *http.Request) {
 			http.FileServer(http.FS(content)).ServeHTTP(rw, r)
 		})) // serve web static assets
-	err := p.addLoginPageHandler()
-	if err != nil {
-		panic(err)
-	}
-	err = p.addRegisterPageHandler()
-	if err != nil {
-		panic(err)
-	}
-	err = p.addHomePageHandler()
-	if err != nil {
-		panic(err)
-	}
-	err = p.addLogoutHandler()
-	if err != nil {
-		panic(err)
-	}
+	p.addLoginPageHandler()
+	p.addRegisterPageHandler()
+	p.addHomePageHandler()
+	p.addCategoriesPageHandler()
+	p.addPoemsPageHandler()
+	p.addLogoutHandler()
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%d", p.host, p.port), nil)) // Start server
 }

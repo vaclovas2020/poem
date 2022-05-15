@@ -70,7 +70,7 @@ func (p *adminFrontendCmd) generateNewTokenAndShowRegister(session *sessions.Ses
 	fmt.Fprint(rw, output)
 }
 
-func (p *adminFrontendCmd) addRegisterPageHandler() error {
+func (p *adminFrontendCmd) addRegisterPageHandler() {
 	http.Handle("/register", webimizer.HttpHandlerStruct{
 		Handler: webimizer.HttpHandler(func(rw http.ResponseWriter, r *http.Request) {
 			var (
@@ -161,5 +161,4 @@ func (p *adminFrontendCmd) addRegisterPageHandler() error {
 		NotAllowHandler: webimizer.HttpNotAllowHandler(httpNotAllowFunc), // webimizer.HtttpNotAllowHandler call if method is not allowed
 		AllowedMethods:  []string{"GET", "POST"},                         // define allowed methods
 	}.Build())
-	return nil
 }
