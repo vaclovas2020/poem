@@ -4,6 +4,8 @@ Go-powered CMS for poets and writers (based on gRPC services)
 [![Go Reference](https://pkg.go.dev/badge/webimizer.dev/poem.svg)](https://pkg.go.dev/webimizer.dev/poem)
 
 ![Poem](cmd/subcommands/adminfrontend/assets/img/poem_logo.png "Poem")
+## Project idea
+Project idea is to develop Cload-based platform for poets & writers. Poets should have posibility to write poems and create diffrent categories. Poems and categories must be visible only to author. Maybe in the future would be good to add the Share button. 
 
 This project is based on Go and use gRPC framework for backend web services. 
 By developing this project, I learned:
