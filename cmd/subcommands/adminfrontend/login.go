@@ -135,6 +135,7 @@ func (p *adminFrontendCmd) addLoginPageHandler() error {
 						session.Values["userLoggedIn"] = true
 						session.Values["email"] = response.User.Email
 						session.Values["role"] = response.User.Role.String()
+						session.Values["userId"] = response.User.UserId
 						session.Save(r, rw)
 						rw.Header().Set("Cache-Control", "no-store, must-revalidate")
 						rw.Header().Set("Pragma", "no-cache")
