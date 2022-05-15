@@ -23,8 +23,7 @@ type loginTemplateParams struct {
 }
 
 func httpNotAllowFunc(rw http.ResponseWriter, r *http.Request) {
-	rw.WriteHeader(http.StatusBadRequest)
-	fmt.Fprint(rw, "Bad Request")
+	errorMsg(rw, fmt.Errorf("Bad request"), http.StatusBadRequest)
 }
 
 func (p *adminFrontendCmd) generateNewTokenAndShowLogin(session *sessions.Session, rw http.ResponseWriter, r *http.Request) {
@@ -36,7 +35,7 @@ func (p *adminFrontendCmd) generateNewTokenAndShowLogin(session *sessions.Sessio
 	session.Values["xsrf_token"] = xsrf
 	secureXsrf, err := securecookie.New(*reverseBytes(hashKey), *reverseBytes(cryptoKey)).Encode("xsrf_token", xsrf)
 	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		errorMsg(rw, err, http.StatusInternalServerError)
 		return
 	}
 	obj := &loginTemplateParams{
@@ -52,14 +51,14 @@ func (p *adminFrontendCmd) generateNewTokenAndShowLogin(session *sessions.Sessio
 	}
 	err = session.Save(r, rw)
 	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		errorMsg(rw, err, http.StatusInternalServerError)
 		return
 	}
 	rw.Header().Set("Cache-Control", "no-store, must-revalidate")
 	rw.Header().Set("Pragma", "no-cache")
 	output, err := runtime.TemplateParse(templates, "template/login.html", obj)
 	if err != nil {
-		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		errorMsg(rw, err, http.StatusInternalServerError)
 		return
 	}
 	fmt.Fprint(rw, output)
@@ -74,7 +73,7 @@ func (p *adminFrontendCmd) addLoginPageHandler() error {
 			)
 			session, err := store.Get(r, "sid")
 			if err != nil {
-				http.Error(rw, err.Error(), http.StatusInternalServerError)
+				errorMsg(rw, err, http.StatusInternalServerError)
 				return
 			}
 			if v, found := session.Values["userLoggedIn"].(bool); found && v {
@@ -87,7 +86,7 @@ func (p *adminFrontendCmd) addLoginPageHandler() error {
 			webimizer.Post(rw, r, func(rw http.ResponseWriter, r *http.Request) {
 				err = r.ParseForm()
 				if err != nil {
-					http.Error(rw, err.Error(), http.StatusBadRequest)
+					errorMsg(rw, err, http.StatusBadRequest)
 					return
 				}
 				token := r.FormValue("xsrf_token")
@@ -101,16 +100,16 @@ func (p *adminFrontendCmd) addLoginPageHandler() error {
 				var realToken string
 				securecookie.New(*reverseBytes(hashKey), *reverseBytes(cryptoKey)).Decode("xsrf_token", token, &realToken)
 				if realToken == "" {
-					http.Error(rw, "cannot decode xsrf_token value", http.StatusBadRequest)
+					errorMsg(rw, fmt.Errorf("cannot decode xsrf_token value"), http.StatusBadRequest)
 					return
 				}
 				if _, exists := session.Values["xsrf_token"]; !exists {
-					http.Error(rw, "no xsrf_token value stored in current session", http.StatusBadRequest)
+					errorMsg(rw, fmt.Errorf("no xsrf_token value stored in current session"), http.StatusBadRequest)
 					return
 				}
 				sessToken := session.Values["xsrf_token"].(string)
 				if sessToken != realToken {
-					http.Error(rw, "xsrf_token value is not valid for this session: "+sessToken+" "+realToken, http.StatusBadRequest)
+					errorMsg(rw, fmt.Errorf("xsrf_token value is not valid for this session"), http.StatusBadRequest)
 					return
 				}
 				valid := xsrftoken.Valid(realToken, p.hashKey, session.ID, "oauth")
@@ -124,7 +123,7 @@ func (p *adminFrontendCmd) addLoginPageHandler() error {
 					if response.Success {
 						session, err = session.Store().New(r, "sid")
 						if err != nil {
-							http.Error(rw, err.Error(), http.StatusInternalServerError)
+							errorMsg(rw, err, http.StatusInternalServerError)
 							return
 						}
 						session.Values["userLoggedIn"] = true
@@ -141,7 +140,7 @@ func (p *adminFrontendCmd) addLoginPageHandler() error {
 						return
 					}
 				} else {
-					http.Error(rw, "xsrf_token expired", http.StatusBadRequest)
+					errorMsg(rw, fmt.Errorf("xsrf_token expired"), http.StatusBadRequest)
 					return
 				}
 			})

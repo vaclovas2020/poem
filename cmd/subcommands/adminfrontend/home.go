@@ -31,7 +31,7 @@ func (p *adminFrontendCmd) addHomePageHandler() error {
 		Handler: webimizer.HttpHandler(func(rw http.ResponseWriter, r *http.Request) {
 			session, err := store.Get(r, "sid")
 			if err != nil {
-				http.Error(rw, err.Error(), http.StatusInternalServerError)
+				errorMsg(rw, err, http.StatusInternalServerError)
 				return
 			}
 			session.Save(r, rw)
@@ -49,7 +49,7 @@ func (p *adminFrontendCmd) addHomePageHandler() error {
 				}
 				output, err := runtime.TemplateParse(templates, "template/home.html", obj)
 				if err != nil {
-					http.Error(rw, err.Error(), http.StatusInternalServerError)
+					errorMsg(rw, err, http.StatusInternalServerError)
 					return
 				}
 				fmt.Fprint(rw, output)
@@ -58,7 +58,7 @@ func (p *adminFrontendCmd) addHomePageHandler() error {
 				rw.Header().Set("Cache-Control", "no-store, must-revalidate")
 				rw.Header().Set("Pragma", "no-cache")
 				obj := &homeGuestParams{
-					HomeTitle:     "Dashboard",
+					HomeTitle:     "Home",
 					LoginTitle:    "Login",
 					RegisterTitle: "Register",
 					PageTitle:     "Cloud-based platform for poets & writers | Poem CMS",
@@ -66,7 +66,7 @@ func (p *adminFrontendCmd) addHomePageHandler() error {
 				}
 				output, err := runtime.TemplateParse(templates, "template/home-guest.html", obj)
 				if err != nil {
-					http.Error(rw, err.Error(), http.StatusInternalServerError)
+					errorMsg(rw, err, http.StatusInternalServerError)
 					return
 				}
 				fmt.Fprint(rw, output)

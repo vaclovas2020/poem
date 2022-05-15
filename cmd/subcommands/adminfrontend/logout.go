@@ -11,7 +11,7 @@ func (p *adminFrontendCmd) addLogoutHandler() error {
 		Handler: webimizer.HttpHandler(func(rw http.ResponseWriter, r *http.Request) {
 			session, err := store.Get(r, "sid")
 			if err != nil {
-				http.Error(rw, err.Error(), http.StatusInternalServerError)
+				errorMsg(rw, err, http.StatusInternalServerError)
 				return
 			}
 			if v, found := session.Values["userLoggedIn"].(bool); found && v {
