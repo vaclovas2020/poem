@@ -6,6 +6,10 @@ option go_package = "webimizer.dev/poem/admin";
 service Admin {
   // Add new poem
   rpc AddPoem (AdminPoem) returns (PoemResponse) {}
+  // Edit poem
+  rpc EditPoem (AdminPoemEdit) returns (PoemEditResponse) {}
+  // Delete poem
+  rpc DeletePoem (DeletePoemRequest) returns (DeletePoemResponse) {}
   // Add new category
   rpc AddCategory (AdminCategory) returns (CategoryResponse) {}
   // Edit category
@@ -31,9 +35,23 @@ message CategoryEditResponse  {
   AdminCategoryEdit category = 2;
 }
 
+message PoemEditResponse  {
+  bool success = 1;
+  AdminPoemEdit poem = 2;
+}
+
 message DeleteCategoryRequest {
   int32 categoryId = 1;
   int64 userId = 2;
+}
+
+message DeletePoemRequest {
+  int32 poemId = 1;
+  int64 userId = 2;
+}
+
+message DeletePoemResponse {
+  bool success = 1;
 }
 
 message DeleteCategoryResponse {
@@ -45,6 +63,14 @@ message AdminPoem {
   string text = 2;
   int32 categoryId = 3;
   int64 userId = 4;
+}
+
+message AdminPoemEdit {
+  string title = 1;
+  string text = 2;
+  int32 categoryId = 3;
+  int64 userId = 4;
+  int32 poemId = 5;
 }
 
 message AdminCategory {

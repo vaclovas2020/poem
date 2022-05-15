@@ -24,6 +24,10 @@ const _ = grpc.SupportPackageIsVersion7
 type AdminClient interface {
 	// Add new poem
 	AddPoem(ctx context.Context, in *AdminPoem, opts ...grpc.CallOption) (*PoemResponse, error)
+	// Edit poem
+	EditPoem(ctx context.Context, in *AdminPoemEdit, opts ...grpc.CallOption) (*PoemEditResponse, error)
+	// Delete poem
+	DeletePoem(ctx context.Context, in *DeletePoemRequest, opts ...grpc.CallOption) (*DeletePoemResponse, error)
 	// Add new category
 	AddCategory(ctx context.Context, in *AdminCategory, opts ...grpc.CallOption) (*CategoryResponse, error)
 	// Edit category
@@ -43,6 +47,24 @@ func NewAdminClient(cc grpc.ClientConnInterface) AdminClient {
 func (c *adminClient) AddPoem(ctx context.Context, in *AdminPoem, opts ...grpc.CallOption) (*PoemResponse, error) {
 	out := new(PoemResponse)
 	err := c.cc.Invoke(ctx, "/Admin/AddPoem", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) EditPoem(ctx context.Context, in *AdminPoemEdit, opts ...grpc.CallOption) (*PoemEditResponse, error) {
+	out := new(PoemEditResponse)
+	err := c.cc.Invoke(ctx, "/Admin/EditPoem", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *adminClient) DeletePoem(ctx context.Context, in *DeletePoemRequest, opts ...grpc.CallOption) (*DeletePoemResponse, error) {
+	out := new(DeletePoemResponse)
+	err := c.cc.Invoke(ctx, "/Admin/DeletePoem", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -82,6 +104,10 @@ func (c *adminClient) DeleteCategory(ctx context.Context, in *DeleteCategoryRequ
 type AdminServer interface {
 	// Add new poem
 	AddPoem(context.Context, *AdminPoem) (*PoemResponse, error)
+	// Edit poem
+	EditPoem(context.Context, *AdminPoemEdit) (*PoemEditResponse, error)
+	// Delete poem
+	DeletePoem(context.Context, *DeletePoemRequest) (*DeletePoemResponse, error)
 	// Add new category
 	AddCategory(context.Context, *AdminCategory) (*CategoryResponse, error)
 	// Edit category
@@ -97,6 +123,12 @@ type UnimplementedAdminServer struct {
 
 func (UnimplementedAdminServer) AddPoem(context.Context, *AdminPoem) (*PoemResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddPoem not implemented")
+}
+func (UnimplementedAdminServer) EditPoem(context.Context, *AdminPoemEdit) (*PoemEditResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EditPoem not implemented")
+}
+func (UnimplementedAdminServer) DeletePoem(context.Context, *DeletePoemRequest) (*DeletePoemResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeletePoem not implemented")
 }
 func (UnimplementedAdminServer) AddCategory(context.Context, *AdminCategory) (*CategoryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddCategory not implemented")
@@ -134,6 +166,42 @@ func _Admin_AddPoem_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AdminServer).AddPoem(ctx, req.(*AdminPoem))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_EditPoem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminPoemEdit)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).EditPoem(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/Admin/EditPoem",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).EditPoem(ctx, req.(*AdminPoemEdit))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Admin_DeletePoem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePoemRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).DeletePoem(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/Admin/DeletePoem",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).DeletePoem(ctx, req.(*DeletePoemRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -202,6 +270,14 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddPoem",
 			Handler:    _Admin_AddPoem_Handler,
+		},
+		{
+			MethodName: "EditPoem",
+			Handler:    _Admin_EditPoem_Handler,
+		},
+		{
+			MethodName: "DeletePoem",
+			Handler:    _Admin_DeletePoem_Handler,
 		},
 		{
 			MethodName: "AddCategory",
