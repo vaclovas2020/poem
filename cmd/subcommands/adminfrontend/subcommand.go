@@ -25,11 +25,6 @@ type adminFrontendCmd struct {
 	gRPCOauthPort int    // oauth gRPC oauth port number
 	gRPCPoemsHost string // poems gRPC oauth hostname
 	gRPCPoemsPort int    // poems gRPC oauth port number
-	mysqlHost     string // mysql hostname
-	mysqlPort     int    // mysql port
-	mysqlUser     string // mysql username
-	mysqlPassword string // mysql password
-	mysqlDatabase string // mysql database name
 	hashKey       string // session hash key
 	cryptoKey     string // session crypto key
 }
@@ -66,17 +61,8 @@ func (p *adminFrontendCmd) SetFlags(f *flag.FlagSet) {
 	if err != nil {
 		port = 0
 	}
-	mysql_port, err := strconv.Atoi(os.Getenv("MYSQL_PORT"))
-	if err != nil {
-		mysql_port = 0
-	}
 	f.StringVar(&p.host, "host", os.Getenv("SERVER_HOST"), "server hostname")
 	f.IntVar(&p.port, "port", port, "server port")
-	f.StringVar(&p.mysqlHost, "mysql-host", os.Getenv("MYSQL_HOST"), "mysql hostname")
-	f.IntVar(&p.mysqlPort, "mysql-port", mysql_port, "mysql port")
-	f.StringVar(&p.mysqlUser, "mysql-user", os.Getenv("MYSQL_USER"), "mysql user")
-	f.StringVar(&p.mysqlPassword, "mysql-password", os.Getenv("MYSQL_PASSWORD"), "mysql password")
-	f.StringVar(&p.mysqlDatabase, "mysql-database", os.Getenv("MYSQL_DATABASE"), "mysql database name")
 	f.StringVar(&p.hashKey, "hash-key", os.Getenv("HASH_KEY"), "session hash key")
 	f.StringVar(&p.cryptoKey, "crypto-key", os.Getenv("CRYPTO_KEY"), "session crypto key")
 }
