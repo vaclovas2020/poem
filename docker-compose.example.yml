@@ -50,11 +50,6 @@ services:
       OAUTH_RPC_PORT: 7792
       POEMS_RPC_HOST: poems_rpc
       POEMS_RPC_PORT: 7789
-      MYSQL_HOST: db
-      MYSQL_PORT: 3306
-      MYSQL_DATABASE: exampledb
-      MYSQL_USER: exampleuser
-      MYSQL_PASSWORD: examplepass
       HASH_KEY: "r6AU4ArEbR5DF55sHQQRZQVBTqNPf5JF"
       CRYPTO_KEY: "Kbb22QSGXta8BhMXQUqxsddqfZuB48dm"
     volumes:
