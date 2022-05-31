@@ -8,7 +8,7 @@ Go-powered CMS for poets and writers (based on gRPC services)
 
 ## Project idea
 
-Project idea is to develop Cload-based platform for poets & writers. Poets should have posibility to write poems and create diffrent categories. Poems and categories must be visible only to author. Maybe in the future would be good to add the Share button. 
+Project idea is to develop Cloud-based platform for poets & writers. Poets should have posibility to write poems and create diffrent categories. Poems and categories must be visible only to author. Maybe in the future would be good to add the Share button. 
 
 This project is based on Go and use gRPC framework for backend web services. 
 
