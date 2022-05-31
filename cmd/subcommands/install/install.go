@@ -63,6 +63,10 @@ func (p *installCmd) createCategoriesDb(db *sql.DB) error {
 	if err != nil {
 		return err
 	}
+	_, err = db.Exec("ALTER TABLE `poem_categories` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;")
+	if err != nil {
+		return err
+	}
 	fmt.Println("CMS categories database installed!")
 	return nil
 }
@@ -70,6 +74,10 @@ func (p *installCmd) createCategoriesDb(db *sql.DB) error {
 /* Create poems database schema */
 func (p *installCmd) createPoemsDb(db *sql.DB) error {
 	_, err := db.Exec("CREATE TABLE IF NOT EXISTS `poem_poems` (poem_id INT NOT NULL AUTO_INCREMENT, category_id INT NOT NULL, user_id INT NOT NULL, title VARCHAR(100) NOT NULL, text TEXT NOT NULL, PRIMARY KEY (poem_id) );")
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec("ALTER TABLE `poem_poems` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;")
 	if err != nil {
 		return err
 	}
