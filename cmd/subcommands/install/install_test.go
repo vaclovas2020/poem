@@ -37,6 +37,8 @@ func TestCreateCategoriesDb(t *testing.T) {
 	db, mock := newMock()
 	sql := "CREATE TABLE IF NOT EXISTS `poem_categories` \\(category_id INT NOT NULL AUTO_INCREMENT, user_id INT NOT NULL, name VARCHAR\\(100\\) NOT NULL, slug VARCHAR\\(100\\) NOT NULL, status VARCHAR\\(10\\) NOT NULL, PRIMARY KEY \\(category_id\\), UNIQUE KEY \\(slug\\) \\);"
 	mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(0, 0))
+	sql2 := "ALTER TABLE `poem_categories` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;"
+	mock.ExpectExec(sql2).WillReturnResult(sqlmock.NewResult(0, 0))
 	err := p.createCategoriesDb(db)
 	assert.NoError(t, err)
 	mock.ExpectExec(sql).WillReturnError(fmt.Errorf("Testing error handler"))
@@ -48,6 +50,8 @@ func TestCreatePoemDb(t *testing.T) {
 	db, mock := newMock()
 	sql := "CREATE TABLE IF NOT EXISTS `poem_poems` \\(poem_id INT NOT NULL AUTO_INCREMENT, category_id INT NOT NULL, user_id INT NOT NULL, title VARCHAR\\(100\\) NOT NULL, text TEXT NOT NULL, PRIMARY KEY \\(poem_id\\) \\);"
 	mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(0, 0))
+	sql2 := "ALTER TABLE `poem_poems` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;"
+	mock.ExpectExec(sql2).WillReturnResult(sqlmock.NewResult(0, 0))
 	err := p.createPoemsDb(db)
 	assert.NoError(t, err)
 	mock.ExpectExec(sql).WillReturnError(fmt.Errorf("Testing error handler"))
@@ -78,8 +82,12 @@ func TestInstallDatabase(t *testing.T) {
 	mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(0, 0))
 	sql3 := "CREATE TABLE IF NOT EXISTS `poem_categories` \\(category_id INT NOT NULL AUTO_INCREMENT, user_id INT NOT NULL, name VARCHAR\\(100\\) NOT NULL, slug VARCHAR\\(100\\) NOT NULL, status VARCHAR\\(10\\) NOT NULL, PRIMARY KEY \\(category_id\\), UNIQUE KEY \\(slug\\) \\);"
 	mock.ExpectExec(sql3).WillReturnResult(sqlmock.NewResult(0, 0))
+	sql2 := "ALTER TABLE `poem_categories` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;"
+	mock.ExpectExec(sql2).WillReturnResult(sqlmock.NewResult(0, 0))
 	sql4 := "CREATE TABLE IF NOT EXISTS `poem_poems` \\(poem_id INT NOT NULL AUTO_INCREMENT, category_id INT NOT NULL, user_id INT NOT NULL, title VARCHAR\\(100\\) NOT NULL, text TEXT NOT NULL, PRIMARY KEY \\(poem_id\\) \\);"
 	mock.ExpectExec(sql4).WillReturnResult(sqlmock.NewResult(0, 0))
+	sql1 := "ALTER TABLE `poem_poems` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;"
+	mock.ExpectExec(sql1).WillReturnResult(sqlmock.NewResult(0, 0))
 	err := p.installDatabase(db)
 	assert.NoError(t, err)
 	mock.ExpectExec(sql).WillReturnError(fmt.Errorf("Testing error handler"))
