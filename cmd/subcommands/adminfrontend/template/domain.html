@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+{{$xsrf := .XsrfToken}}
+{{$actionUrl := .ActionUrl}}
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/assets/css/home.css" rel="stylesheet">
+  <script src="/assets/js/jquery.min.js"></script>
+  <title>{{.PageTitle}}</title>
+</head>
+
+<body class="bg-dark text-white">
+  <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">
+        <img style="width: 50px;height: auto;" src="/assets/img/poem_logo.png" alt="Poem logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="justify-content-between collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/">{{.HomeTitle}}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/categories">{{.CategoriesTitle}}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/poems">{{.PoemsTitle}}</a>
+          </li>
+        </ul>
+        <div class="d-flex dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            {{.UserEmail}}
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="/logout">{{.LogoutTitle}}</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="container mt-4 mb-4">
+    {{if .Message}}
+    <div class="alert alert-danger" role="alert">
+      {{.Message}}
+    </div>
+    {{end}}
+    <form method="POST" action="{{$actionUrl}}">
+      <h2>Asign your account with your own domain and publish your poetry content to public.</h2>
+      <div class="form-group">
+        <label for="name">Domain name</label>
+        <input type="text" class="form-control" name="name" id="name" autocomplete="off" placeholder="Enter your domain name">
+      </div>
+      <input type="hidden" name="xsrf_token" value="{{$xsrf}}" />
+      <input type="hidden" name="action" value="create" />
+      <button style="margin: 1em 0;" type="submit" class="btn btn-primary">{{.SubmitButton}}</button>
+    </form>
+    <p>IMPORTANT: You need to add your domain's DNS entry A pointer to IP <b>54.38.79.63</b></p>
+  </div>
+  <footer class="footer">
+    <div class="container-fluid">
+      <p
+        style="display: block;font-size: 12px;text-align: center;padding-top: 1em;border-top: 1px solid rgba(255,255,255,0.1);">
+        {{.CopyrightText}}</p>
+    </div>
+  </footer>
+  <script src="/assets/js/bootstrap.bundle.min.js" defer></script>
+</body>
+
+</html>
