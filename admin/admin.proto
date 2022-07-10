@@ -16,6 +16,12 @@ service Admin {
   rpc EditCategory (AdminCategoryEdit) returns (CategoryEditResponse) {}
   // Delete category
   rpc DeleteCategory (DeleteCategoryRequest) returns (DeleteCategoryResponse) {}
+
+  rpc AddDomain (AdminDomain) returns (DomainResponse) {}
+  // Edit Domain
+  rpc EditDomain (AdminDomain) returns (DomainResponse) {}
+  // Delete Domain
+  rpc DeleteDomain (AdminDomain) returns (DomainResponse) {}
 }
 
 // The response message containing poem  object content.
@@ -28,6 +34,11 @@ message PoemResponse  {
 message CategoryResponse  {
     bool success = 1;
     AdminCategory category = 2;
+}
+
+message DomainResponse  {
+  bool success = 1;
+  AdminDomain domain = 2;
 }
 
 message CategoryEditResponse  {
@@ -63,6 +74,11 @@ message AdminPoem {
   string text = 2;
   int32 categoryId = 3;
   int64 userId = 4;
+}
+
+message AdminDomain {
+  string domain = 1;
+  int64 userId = 2;
 }
 
 message AdminPoemEdit {
