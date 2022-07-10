@@ -60,7 +60,7 @@
       <h2>Asign your account with your own domain and publish your poetry content to public.</h2>
       <div class="form-group">
         <label for="name">Domain name</label>
-        <input type="text" class="form-control" name="name" id="name" autocomplete="off" placeholder="Enter your domain name">
+        <input type="text" class="form-control" value =" {{if .DomainName}}{{.DomainName}}{{end}}" name="name" id="name" autocomplete="off" placeholder="Enter your domain name">
       </div>
       <input type="hidden" name="xsrf_token" value="{{$xsrf}}" />
       <input type="hidden" name="action" value="create" />
