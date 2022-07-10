@@ -46,6 +46,17 @@ func TestCreateCategoriesDb(t *testing.T) {
 	assert.Error(t, err)
 }
 
+func TestCreateDomainDb(t *testing.T) {
+	db, mock := newMock()
+	sql := "CREATE TABLE IF NOT EXISTS `poem_domain` \\(user_id INT NOT NULL, user_domain VARCHAR\\(255\\) NOT NULL\\);"
+	mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(0, 0))
+	err := p.createDomainDb(db)
+	assert.NoError(t, err)
+	mock.ExpectExec(sql).WillReturnError(fmt.Errorf("Testing error handler"))
+	err = p.createDomainDb(db)
+	assert.Error(t, err)
+}
+
 func TestCreatePoemDb(t *testing.T) {
 	db, mock := newMock()
 	sql := "CREATE TABLE IF NOT EXISTS `poem_poems` \\(poem_id INT NOT NULL AUTO_INCREMENT, category_id INT NOT NULL, user_id INT NOT NULL, title VARCHAR\\(100\\) NOT NULL, text TEXT NOT NULL, PRIMARY KEY \\(poem_id\\) \\);"
@@ -88,6 +99,8 @@ func TestInstallDatabase(t *testing.T) {
 	mock.ExpectExec(sql4).WillReturnResult(sqlmock.NewResult(0, 0))
 	sql1 := "ALTER TABLE `poem_poems` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;"
 	mock.ExpectExec(sql1).WillReturnResult(sqlmock.NewResult(0, 0))
+	sql5 := "CREATE TABLE IF NOT EXISTS `poem_domain` \\(user_id INT NOT NULL, user_domain VARCHAR\\(255\\) NOT NULL\\);"
+	mock.ExpectExec(sql5).WillReturnResult(sqlmock.NewResult(0, 0))
 	err := p.installDatabase(db)
 	assert.NoError(t, err)
 	mock.ExpectExec(sql).WillReturnError(fmt.Errorf("Testing error handler"))

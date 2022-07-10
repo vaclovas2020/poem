@@ -22,6 +22,7 @@ func (p *installCmd) installDatabase(db *sql.DB) error {
 		doInstallHandler(p.createUserDb),
 		doInstallHandler(p.createCategoriesDb),
 		doInstallHandler(p.createPoemsDb),
+		doInstallHandler(p.createDomainDb),
 	})
 	if err != nil {
 		fmt.Println(err.Error())
@@ -54,6 +55,16 @@ func (p *installCmd) createUserDb(db *sql.DB) error {
 		return err
 	}
 	fmt.Println("CMS user database installed!")
+	return nil
+}
+
+/* Create user database schema */
+func (p *installCmd) createDomainDb(db *sql.DB) error {
+	_, err := db.Exec("CREATE TABLE IF NOT EXISTS `poem_domain` (user_id INT NOT NULL, user_domain VARCHAR(255) NOT NULL);")
+	if err != nil {
+		return err
+	}
+	fmt.Println("CMS domain database installed!")
 	return nil
 }
 
