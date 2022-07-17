@@ -10,7 +10,7 @@ import (
 	"webimizer.dev/poem/admin"
 )
 
-func (p *adminFrontendCmd) grpcGetDomain(req *admin.AdminDomain) (response *admin.DomainResponse, err error) {
+func (p *adminFrontendCmd) grpcGetDomain(req *admin.GetAdminDomain) (response *admin.DomainResponse, err error) {
 	var opts []grpc.DialOption
 	opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", p.gRPCPoemsHost, p.gRPCPoemsPort), opts...)
@@ -21,5 +21,5 @@ func (p *adminFrontendCmd) grpcGetDomain(req *admin.AdminDomain) (response *admi
 	client := admin.NewAdminClient(conn)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	return client.AddDomain(ctx, req)
+	return client.GetDomain(ctx, req)
 }

@@ -21,7 +21,7 @@ service Admin {
   // Edit Domain
   rpc EditDomain (AdminDomain) returns (DomainResponse) {}
  // Get domain
-  rpc GetDomain (AdminDomain) returns (DomainResponse) {}
+  rpc GetDomain (GetAdminDomain) returns (DomainResponse) {}
   // Delete Domain
   rpc DeleteDomain (AdminDomain) returns (DomainResponse) {}
 }
