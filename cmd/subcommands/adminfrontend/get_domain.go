@@ -13,7 +13,7 @@ import (
 func (p *adminFrontendCmd) grpcGetDomain(req *admin.GetAdminDomain) (response *admin.DomainResponse, err error) {
 	var opts []grpc.DialOption
 	opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", p.gRPCPoemsHost, p.gRPCPoemsPort), opts...)
+	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", p.gRPCAdminHost, p.gRPCAdminPort), opts...)
 	if err != nil {
 		return nil, err
 	}

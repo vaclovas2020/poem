@@ -32,7 +32,7 @@
             <a class="nav-link" href="/">{{.HomeTitle}}</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/categories">{{.CategoriesTitle}}</a>
+            <a class="nav-link" href="/categories">{{.CategoriesTitle}}</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/poems">{{.PoemsTitle}}</a>
@@ -44,7 +44,7 @@
             {{.UserEmail}}
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" href="/domain">{{.DomainTitle}}</a></li>
+            <li><a class="dropdown-item active" aria-current="page" href="/domain">{{.DomainTitle}}</a></li>
             <li><a class="dropdown-item" href="/logout">{{.LogoutTitle}}</a></li>
           </ul>
         </div>

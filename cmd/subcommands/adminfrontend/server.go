@@ -33,6 +33,7 @@ func (p *adminFrontendCmd) runServer() {
 	p.addHomePageHandler()
 	p.addCategoriesPageHandler()
 	p.addPoemsPageHandler()
+	p.addDomainPageHandler()
 	p.addLogoutHandler()
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%d", p.host, p.port), nil)) // Start server
 }
