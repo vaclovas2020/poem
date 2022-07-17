@@ -20,6 +20,8 @@ service Admin {
   rpc AddDomain (AdminDomain) returns (DomainResponse) {}
   // Edit Domain
   rpc EditDomain (AdminDomain) returns (DomainResponse) {}
+ // Get domain
+  rpc GetDomain (AdminDomain) returns (DomainResponse) {}
   // Delete Domain
   rpc DeleteDomain (AdminDomain) returns (DomainResponse) {}
 }
@@ -79,6 +81,10 @@ message AdminPoem {
 message AdminDomain {
   string domain = 1;
   int64 userId = 2;
+}
+
+message GetAdminDomain {
+  int64 userId = 1;
 }
 
 message AdminPoemEdit {

@@ -37,6 +37,8 @@ type AdminClient interface {
 	AddDomain(ctx context.Context, in *AdminDomain, opts ...grpc.CallOption) (*DomainResponse, error)
 	// Edit Domain
 	EditDomain(ctx context.Context, in *AdminDomain, opts ...grpc.CallOption) (*DomainResponse, error)
+	// Get domain
+	GetDomain(ctx context.Context, in *AdminDomain, opts ...grpc.CallOption) (*DomainResponse, error)
 	// Delete Domain
 	DeleteDomain(ctx context.Context, in *AdminDomain, opts ...grpc.CallOption) (*DomainResponse, error)
 }
@@ -121,6 +123,15 @@ func (c *adminClient) EditDomain(ctx context.Context, in *AdminDomain, opts ...g
 	return out, nil
 }
 
+func (c *adminClient) GetDomain(ctx context.Context, in *AdminDomain, opts ...grpc.CallOption) (*DomainResponse, error) {
+	out := new(DomainResponse)
+	err := c.cc.Invoke(ctx, "/Admin/GetDomain", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *adminClient) DeleteDomain(ctx context.Context, in *AdminDomain, opts ...grpc.CallOption) (*DomainResponse, error) {
 	out := new(DomainResponse)
 	err := c.cc.Invoke(ctx, "/Admin/DeleteDomain", in, out, opts...)
@@ -149,6 +160,8 @@ type AdminServer interface {
 	AddDomain(context.Context, *AdminDomain) (*DomainResponse, error)
 	// Edit Domain
 	EditDomain(context.Context, *AdminDomain) (*DomainResponse, error)
+	// Get domain
+	GetDomain(context.Context, *AdminDomain) (*DomainResponse, error)
 	// Delete Domain
 	DeleteDomain(context.Context, *AdminDomain) (*DomainResponse, error)
 	mustEmbedUnimplementedAdminServer()
@@ -181,6 +194,9 @@ func (UnimplementedAdminServer) AddDomain(context.Context, *AdminDomain) (*Domai
 }
 func (UnimplementedAdminServer) EditDomain(context.Context, *AdminDomain) (*DomainResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EditDomain not implemented")
+}
+func (UnimplementedAdminServer) GetDomain(context.Context, *AdminDomain) (*DomainResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDomain not implemented")
 }
 func (UnimplementedAdminServer) DeleteDomain(context.Context, *AdminDomain) (*DomainResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteDomain not implemented")
@@ -342,6 +358,24 @@ func _Admin_EditDomain_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Admin_GetDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AdminDomain)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AdminServer).GetDomain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/Admin/GetDomain",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AdminServer).GetDomain(ctx, req.(*AdminDomain))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Admin_DeleteDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AdminDomain)
 	if err := dec(in); err != nil {
@@ -398,6 +432,10 @@ var Admin_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "EditDomain",
 			Handler:    _Admin_EditDomain_Handler,
+		},
+		{
+			MethodName: "GetDomain",
+			Handler:    _Admin_GetDomain_Handler,
 		},
 		{
 			MethodName: "DeleteDomain",
