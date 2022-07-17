@@ -44,6 +44,7 @@
             {{.UserEmail}}
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="/domain">{{.DomainTitle}}</a></li>
             <li><a class="dropdown-item" href="/logout">{{.LogoutTitle}}</a></li>
           </ul>
         </div>
@@ -60,21 +61,22 @@
       <h2>Asign your account with your own domain and publish your poetry content to public.</h2>
       <div class="form-group">
         <label for="name">Domain name</label>
-        <input type="text" class="form-control" value =" {{if .DomainName}}{{.DomainName}}{{end}}" name="name" id="name" autocomplete="off" placeholder="Enter your domain name">
+        <input type="text" class="form-control" value ="{{if .Domain}}{{.Domain}}{{end}}" name="domain" id="domain" autocomplete="off" placeholder="Enter your domain name">
       </div>
       <input type="hidden" name="xsrf_token" value="{{$xsrf}}" />
       <input type="hidden" name="action" value="create" />
       <button style="margin: 1em 0;" type="submit" class="btn btn-primary">{{.SubmitButton}}</button>
     </form>
-    <button type="button" class="btn btn-dager" data-bs-toggle="modal" data-bs-target="#deleteModal-{{$index}}">
-      Delete
+    {{if .Domain}}
+    <button type="button" class="btn btn-dager" data-bs-toggle="modal" data-bs-target="#deleteModal">
+      Delete domain
     </button>
-    <div class="modal fade" id="deleteModal-{{$index}}" tabindex="-1" role="dialog"
-      aria-labelledby="deleteModal-{{$index}}Label" aria-hidden="true">
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
+      aria-labelledby="deleteModal-Label" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="deleteModal-{{$index}}Label">Are you sure?</h5>
+            <h5 class="modal-title" id="deleteModal-Label">Are you sure?</h5>
             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -86,7 +88,7 @@
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <form method="POST" action="{{$actionUrl}}">
               <input type="hidden" name="xsrf_token" value="{{$xsrf}}" />
-              <input type="hidden" name="user_id" value="{{.UserId}}" />
+              <input type="hidden" name="domain" value="{{.Domain}}" />
               <input type="hidden" name="action" value="delete" />
               <button type="submit" class="btn btn-danger">Delete domain</button>
             </form>
@@ -94,6 +96,7 @@
         </div>
       </div>
     </div>
+    {{end}}
     <p>IMPORTANT: You need to add your domain's DNS entry record CNAME <b>poem.dev</b></p>
   </div>
   <footer class="footer">

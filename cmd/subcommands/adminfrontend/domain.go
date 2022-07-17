@@ -3,31 +3,29 @@ package adminfrontend
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 
-	"github.com/google/uuid"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
 	"golang.org/x/net/xsrftoken"
 	"webimizer.dev/poem/admin"
-	"webimizer.dev/poem/poems"
 	"webimizer.dev/poem/runtime"
 	"webimizer.dev/webimizer"
 )
 
 type domainTemplateParams struct {
-	CategoriesTitle string                    // categories page link title
-	PoemsTitle      string                    // poems page link title
-	PageTitle       string                    // page title
-	HomeTitle       string                    // home page title
-	LogoutTitle     string                    // logout title
-	CopyrightText   string                    // footer copyright text
-	UserEmail       string                    // current user email
-	Message         string                    // form error message
-	Categories      map[int32]*poems.Category // Categories map
-	SubmitButton    string                    // category create form submit button text
-	ActionUrl       string                    // category create form action url
-	XsrfToken       string                    // category create form xsrf token hidden field
+	CategoriesTitle string // categories page link title
+	PoemsTitle      string // poems page link title
+	PageTitle       string // page title
+	HomeTitle       string // home page title
+	DomainTitle     string // domain title
+	LogoutTitle     string // logout title
+	CopyrightText   string // footer copyright text
+	UserEmail       string // current user email
+	Message         string // form error message
+	Domain          string // domain value
+	SubmitButton    string // category create form submit button text
+	ActionUrl       string // category create form action url
+	XsrfToken       string // category create form xsrf token hidden field
 }
 
 func (p *adminFrontendCmd) renderDomainPage(session *sessions.Session, rw http.ResponseWriter, r *http.Request) {
@@ -35,7 +33,7 @@ func (p *adminFrontendCmd) renderDomainPage(session *sessions.Session, rw http.R
 		hashKey   = []byte(p.hashKey)
 		cryptoKey = []byte(p.cryptoKey)
 	)
-	xsrf := xsrftoken.Generate(p.hashKey, session.ID, "add_category")
+	xsrf := xsrftoken.Generate(p.hashKey, session.ID, "add_domain")
 	session.Values["xsrf_token"] = xsrf
 	secureXsrf, err := securecookie.New(*reverseBytes(hashKey), *reverseBytes(cryptoKey)).Encode("xsrf_token", xsrf)
 	if err != nil {
@@ -44,11 +42,12 @@ func (p *adminFrontendCmd) renderDomainPage(session *sessions.Session, rw http.R
 	}
 	rw.Header().Set("Cache-Control", "no-store, must-revalidate")
 	rw.Header().Set("Pragma", "no-cache")
-	obj := &categoriesTemplateParams{
+	obj := &domainTemplateParams{
 		HomeTitle:       "Dashboard",
 		LogoutTitle:     "Logout",
 		CategoriesTitle: "Categories",
 		PoemsTitle:      "Poems",
+		DomainTitle:     "Domain",
 		PageTitle:       "Domain | Poem CMS",
 		CopyrightText:   "Copyright © 2022 Vaclovas Lapinskis",
 		UserEmail:       session.Values["email"].(string),
@@ -59,12 +58,14 @@ func (p *adminFrontendCmd) renderDomainPage(session *sessions.Session, rw http.R
 	for _, v := range session.Flashes() {
 		obj.Message = v.(string)
 	}
-	categories, err := p.grpcGetCategories(&poems.CategoriesRequest{Status: poems.CategoriesRequest_PUBLISHED, UserId: session.Values["userId"].(int64)})
+	res, err := p.grpcGetDomain(&admin.GetAdminDomain{UserId: session.Values["userId"].(int64)})
 	if err != nil {
 		errorMsg(rw, err, http.StatusInternalServerError)
 		return
 	}
-	obj.Categories = categories.Categories
+	if res.Success {
+		obj.Domain = res.Domain.Domain
+	}
 	err = session.Save(r, rw)
 	if err != nil {
 		errorMsg(rw, err, http.StatusInternalServerError)
@@ -106,19 +107,13 @@ func (p *adminFrontendCmd) addDomainPageHandler() {
 						return
 					}
 					token := r.FormValue("xsrf_token")
-					name := r.FormValue("name")
-					category_id := r.FormValue("category_id")
-					if (token == "" || name == "") && action == "create" {
+					domain := r.FormValue("domain")
+					if (token == "" || domain == "") && action == "create" {
 						session.AddFlash("Please enter all form fields")
 						p.renderDomainPage(session, rw, r)
 						return
 					}
-					if (token == "" || name == "" || category_id == "") && action == "update" {
-						session.AddFlash("Please enter all form fields")
-						p.renderDomainPage(session, rw, r)
-						return
-					}
-					if (token == "" || category_id == "") && action == "delete" {
+					if (token == "" || domain == "") && action == "delete" {
 						session.AddFlash("Please enter all form fields")
 						p.renderDomainPage(session, rw, r)
 						return
@@ -138,33 +133,28 @@ func (p *adminFrontendCmd) addDomainPageHandler() {
 						errorMsg(rw, fmt.Errorf("xsrf_token value is not valid for this session"), http.StatusBadRequest)
 						return
 					}
-					valid := xsrftoken.Valid(realToken, p.hashKey, session.ID, "add_category")
+					valid := xsrftoken.Valid(realToken, p.hashKey, session.ID, "add_domain")
 					if valid {
 						switch action {
 						case "create":
-							response, err := p.grpcAddCategory(&admin.AdminCategory{Name: name, Slug: fmt.Sprintf("%s-%s", name, uuid.NewString()), Status: admin.AdminCategory_PUBLISHED, UserId: session.Values["userId"].(int64)})
+							response, err := p.grpcAddDomain(&admin.AdminDomain{Domain: domain, UserId: session.Values["userId"].(int64)})
 							if err != nil {
 								errorMsg(rw, err, http.StatusInternalServerError)
 								return
 							}
 							if !response.Success {
-								session.AddFlash("Cannot add new category")
+								session.AddFlash("Cannot add domain")
 							}
 							p.renderDomainPage(session, rw, r)
 							break
 						case "delete":
-							categoryId, err := strconv.ParseInt(category_id, 10, 32)
-							if err != nil {
-								errorMsg(rw, err, http.StatusInternalServerError)
-								return
-							}
-							response, err := p.grpcDeleteCategory(&admin.DeleteCategoryRequest{CategoryId: int32(categoryId), UserId: session.Values["userId"].(int64)})
+							response, err := p.grpcDeleteDomain(&admin.AdminDomain{Domain: domain, UserId: session.Values["userId"].(int64)})
 							if err != nil {
 								errorMsg(rw, err, http.StatusInternalServerError)
 								return
 							}
 							if !response.Success {
-								session.AddFlash("Cannot delete category")
+								session.AddFlash("Cannot delete domain")
 							}
 							p.renderDomainPage(session, rw, r)
 							break

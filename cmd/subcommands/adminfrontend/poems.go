@@ -19,6 +19,7 @@ type poemsTemplateParams struct {
 	PoemsTitle      string                    // poems page link title
 	PageTitle       string                    // page title
 	HomeTitle       string                    // home page title
+	DomainTitle     string                    // domain title
 	LogoutTitle     string                    // logout title
 	CopyrightText   string                    // footer copyright text
 	UserEmail       string                    // current user email
@@ -49,6 +50,7 @@ func (p *adminFrontendCmd) renderPoemsPage(session *sessions.Session, rw http.Re
 		LogoutTitle:     "Logout",
 		CategoriesTitle: "Categories",
 		PoemsTitle:      "Poems",
+		DomainTitle:     "Domain",
 		PageTitle:       "Poems | Poem CMS",
 		CopyrightText:   "Copyright © 2022 Vaclovas Lapinskis",
 		UserEmail:       session.Values["email"].(string),
