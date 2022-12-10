@@ -19,3 +19,4 @@ reload.sh
 *.yaml
 data
 db_latest.sql
+create-vm.sh
