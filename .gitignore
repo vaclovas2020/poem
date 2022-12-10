@@ -18,3 +18,4 @@ docker-compose.yml
 reload.sh
 *.yaml
 data
+db_latest.sql
